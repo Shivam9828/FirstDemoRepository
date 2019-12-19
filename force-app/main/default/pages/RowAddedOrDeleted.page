@@ -1,0 +1,23 @@
+<apex:page controller="RowAddedOrDeleted" lightningStylesheets="true">
+   
+    <apex:form >
+          
+    <apex:pageBlock title="Contact Records">
+       
+        <apex:pageBlocksection id="rec">
+            <apex:pageBlocktable value="{!wrp}" var="w">
+                <apex:column >
+                    <apex:inputField value="{!w.conData.firstname}"/></apex:column>
+                <apex:column >
+                    <apex:inputField value="{!w.conData.lastname}"/></apex:column>
+                <apex:column >
+                    <apex:inputField value="{!w.conData.Email}"/></apex:column>
+        
+            </apex:pageBlocktable>
+            
+            </apex:pageBlocksection>
+            <apex:commandButton value="save" action="{!save}"/>
+        <apex:commandButton value="Add" action="{!addRow}" reRender="rec"/>
+    </apex:pageBlock>
+        </apex:form>
+</apex:page>

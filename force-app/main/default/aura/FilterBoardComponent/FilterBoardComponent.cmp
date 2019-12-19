@@ -1,0 +1,58 @@
+<aura:component controller="BoardAnythingComponent">
+    
+    <!--Object and List attributes-->
+    <aura:attribute name="groupFieldValues" type="object"/> 
+    <aura:attribute name="groupFieldValuesAfterSave" type="object"/> 
+    <aura:attribute name="groupContainList" type="List"/>
+    <aura:attribute name="listOfCheckedGroup" type="String[]"/>
+    
+    <!--Boolean Attributes-->
+    <aura:attribute name="allGroup" type="Boolean"/> 
+    <aura:attribute name="isGroupTrue" type="Boolean"/> 
+    
+    <!--Handler and Events-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="filterHandle" type="c:HandleFilter" />
+	<table class="slds-table slds-table--bordered">
+                <thead>
+                    <tr class="slds-text-heading--label">
+                        <th class="slds-cell-shrink">
+                            <label class="slds-checkbox" >
+                                <ui:inputCheckbox aura:id="checkAll" change="{!c.checkAllColumns}"/>
+                                <span class="slds-checkbox--faux" />
+                            </label>
+                        </th>
+                        <th class="slds-is-sortable">
+                            <div class="slds-truncate" style="font-size:13px;">Column Name</div>
+                        </th>
+                        <th style="text-align:right;padding:3px 3px 3px 0px;">
+                            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.saveCheckedGroup}"/>
+                        </th>
+                        <th style="text-align:right;padding:3px 11px 3px 0px;">
+                            <lightning:buttonMenu aura:id="menu" alternativeText="Show menu">
+                                <lightning:menuItem value="MenuItemOne" label="Menu Item One" />
+                                <lightning:menuItem value="MenuItemTwo" label="Menu Item Two" />
+                                <lightning:menuItem value="MenuItemThree" label="Menu Item Three" disabled="true" />
+                                <lightning:menuItem value="MenuItemFour" label="Menu Item Four" />
+                            </lightning:buttonMenu>
+                        </th>
+                    </tr>
+                </thead>
+                
+            </table>
+            <ul id="sortable" class="ui-sortable">
+                <aura:iteration items="{!v.groupFieldValues}" var="grp" indexVar="index">
+                    <li style="border: 1px solid #d6dbe4;" >
+                        <span id="listbox-option-unique-id-02" style = "margin-left: 7px;" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                            <label class="slds-checkbox" >
+                                <ui:inputCheckbox aura:id="groupColumn" name="{!index}" value="{!grp.checkGrp}" change="{!c.onchangeCheckbox}"/>
+                                <span class="slds-checkbox--faux" />
+                            </label>
+                            <span class="slds-media__body">  
+                                <span class="groupFields" style="font-size:15px;margin-left: 4px;">{!grp.groupField}</span>
+                            </span>
+                        </span>
+                    </li>
+                </aura:iteration>
+            </ul>
+</aura:component>

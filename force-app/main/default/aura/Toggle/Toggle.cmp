@@ -1,0 +1,5 @@
+<!--c:toggleCss-->
+<aura:component>
+    <lightning:button label="Toggle" onclick="{!c.toggle}"/>
+    <p aura:id="text">Now you see me</p>
+</aura:component>

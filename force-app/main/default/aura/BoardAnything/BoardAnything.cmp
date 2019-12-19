@@ -1,0 +1,564 @@
+<aura:component Controller="BoardAnythingComponent" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <ltng:require styles="{!$Resource.select2Css}"/>
+    
+    <ltng:require scripts="{!join(',', $Resource.JQuery, $Resource.JqueryUI1,$Resource.select2Js)}" afterScriptsLoaded="{!c.setScriptLoaded}"/> 
+    <aura:attribute name="isTrue" type="Boolean" Default="false"/>
+    <aura:attribute name="Spinner" type="Boolean" Default="false"/>
+    <aura:attribute name="isDelete" type="Boolean" Default="false"/>
+    <aura:attribute name="isGroup" type="Boolean" Default="false"/>
+    <aura:attribute name="isSave" type="Boolean" Default="false"/>
+    <aura:attribute name="ShowModule" type="boolean" default="false"/>   
+    <aura:attribute name="objlist" type="List" />
+    <aura:attribute name="selectedObject" type="String"/>
+    <aura:attribute name="selectedListView" type="String"/>
+    <aura:attribute name="selectedBoard" type="String"/>
+    <aura:attribute name="selectedGroupField" type="String"/>
+    <aura:attribute name="selectedSummaryField" type="String"/>
+    <aura:attribute name="inputLabel" type="String"/>
+    <aura:attribute name="isEdit" type="String"/>
+    <aura:attribute name="listViewRecords" type="String[]"/>
+    <aura:attribute name="checkedGroupFields" type="String[]"/>
+    
+    <aura:attribute name="recordsToShow" type="String[]" default="[]"/>
+    <aura:attribute name="savedBoardsList" type="String[]" default="[]"/>
+    <aura:attribute name="selectedTemplateFields" type="String[]"/>
+    <aura:attribute name="setFieldLimit" type="Integer" default="8"/>
+    <aura:attribute name="groupByRecords" type="String[]"/>
+    <aura:attribute name="summaryFieldRecords" type="String[]"/>
+    <aura:attribute name="TemplateFieldValues" type="object"/> 
+    <aura:attribute name="groupFieldValues" type="object"/> 
+    <aura:attribute name="groupFieldValuesAfterSave" type="object"/> 
+    <aura:attribute name="TemplateFieldchecked" type="List"/>
+    <aura:attribute name="updatedTemplateChecked" type="List"/>
+    <aura:attribute name="checkedTemplateFieldLength" type="Integer"/>
+    <aura:attribute name="searchTemplateField" type="String"/>
+    <aura:attribute name="columnheader" type="List" default="[1,2,3,4,5]"/>
+    <aura:attribute name="recordMap" type="List"/>
+    <aura:attribute name="isGroupTrue" type="Boolean" Default="false"/>
+    <aura:attribute name="allGroup" type="Boolean" Default="false"/>
+    <aura:attribute name="listOfCheckedGroup" type="String[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordWrapper" type="List"/>
+    <aura:attribute name="tempFIelds" type="object"/>
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-show" />
+    <aura:attribute name="handleBoardLabel" type="List"/> 
+    <aura:attribute name="handleBoardId" type="string"/>
+    <aura:attribute name="boardId" type="string"/>
+    <aura:attribute name="handleBoard" type="List"/>
+    <aura:attribute name="boardWrapper" type="List"/>
+    <aura:attribute name="isLabelChange" type="Boolean" Default="false"/>
+    <aura:attribute name="isLabel" type="Boolean" Default="false"/>
+    <aura:attribute name="isSpinner" type="Boolean" Default="false"/>
+    <aura:attribute name="editWrapper" type="object"/>
+    <!--New Attributes-->
+    <aura:attribute name="selectEditObject" type="string"/>
+    <aura:attribute name="selectEditListView" type="string"/>
+    <aura:attribute name="selectEditGroup" type="string"/>
+    <aura:attribute name="selectEditSummary" type="string"/>
+    <aura:attribute name="selectEditTemplate" type="List"/>
+    <aura:attribute name="selectEditInput" type="string"/>
+    <aura:attribute name="isEditBoard" type="Boolean" Default="false"/>
+    <aura:attribute name="recdId" type="string" Default=""/>
+    <aura:handler name="mutiSelectEvnt" event="c:SelectTemplate" action="{!c.evntCalled}"/> 
+    <aura:attribute name="isEditSpinner" type="Boolean" Default="false"/>
+     <aura:attribute name="storeLabel" type="string"/>
+     <aura:attribute name="isInputChange" type="Boolean" Default="false"/>
+    <aura:attribute name="isNew" type="Boolean" Default="false"/>
+    <aura:attribute name="error" type="string" default=""/>
+    <aura:attribute name="tmpLength" type="Boolean" Default="false"/>
+    <aura:attribute name="groupContainList" type="List"/>
+    <aura:attribute name="groupListWhenLabelCHange" type="List"/>
+    <aura:attribute name="isFilterForNew" type="Boolean" Default="false"/>
+    <aura:attribute name="isFilterForLbl" type="Boolean" Default="false"/>
+    <aura:attribute name="isEditForLbl" type="Boolean" Default="false"/>
+    <aura:attribute name="selectedItemOptions" type="List"/>
+    <aura:attribute name="tmpOptions" type="List"/>
+    <aura:attribute name="selectedRecordId" type="string" Default=""/>
+    <aura:attribute name="spinnerForEdit" type="Boolean" Default="false"/>
+    <!--Event-->
+    <aura:handler name="editBoardRecord" event="c:HandleEditBoardRecord" action="{!c.updateBoardWithRecord}" />
+    <aura:handler name="filterHandle" event="c:HandleFilter" action="{!c.getFilteredValues}" />
+    
+    <!--Header-->    
+    <aura:if isTrue="{!v.isSpinner}">
+                <div aura:id="spinner" class="slds-spinner_container">
+                    <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                        <span class="slds-assistive-text">Please Wait</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+    <div class="slds-page-header" style="background-color:#F0F0F0;">
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="Refresh" onclick="{!c.redirectToHome}">
+                    <lightning:icon iconName="utility:home" alternativeText="Home" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;" />
+                    <span class="slds-assistive-text">Home</span>
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="Refresh" onclick="{!c.fetchRecordOnRecord}">
+                    <lightning:icon iconName="utility:refresh" alternativeText="Refresh" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;" />
+                    <span class="slds-assistive-text">Refresh</span>
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate boardDiv">
+                <lightning:select class="selectBoard" name="Saved Boards" value="{!v.selectedBoard}" label="Saved Boards" onchange="{!c.fetchBoardLabel}">
+                    <aura:iteration items="{!v.handleBoardLabel}" var="board">
+                        <option text="{!board}" selected="{!board==v.selectedBoard}"></option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>    
+            
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate delBoard">
+                
+                <lightning:button class="slds-m-top_x-small slds-float_left delBtn" variant="brand" label="Delete Board" title="Delete Board" onclick="{!c.forDeleteBoard}"/>
+                
+            </div>
+            
+            
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="Layout" onclick="{!c.ShowModuleBox}">
+                    <lightning:icon class="styleIcon" iconName="utility:layout" alternativeText="Layout" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;"/>
+                    <span class="slds-assistive-text">Layout</span>
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="New" onclick="{!c.newButtonsidebar}">
+                    <lightning:icon class="styleIcon" iconName="utility:add" alternativeText="Add" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;"/>
+                    <span class="slds-assistive-text">New</span>
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="Edit" onclick="{!c.EditBoardRecord}">
+                    <lightning:icon class="styleIcon1" iconName="utility:edit" alternativeText="Edit" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;"/>
+                    <span class="slds-assistive-text">Edit</span>
+                </button>
+            </div><br/>
+            
+            <div class="slds-col slds-size_1-of-12 slds-has-flexi-truncate">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" style="position: relative; width: 43%;bottom: 3px;height: 44px;" title="Filter" onclick="{!c.fetchGroupingFields}">
+                    <lightning:icon class="styleIcon" iconName="utility:richtextoutdent" alternativeText="Filter" style="position:absolute;width:100%;top: 5px; left: 0; bottom: 8px; right: 0;"/>
+                    <span class="slds-assistive-text">Filter</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Draggable Div-->
+    <div class="wall slds-grid slds-gutters">
+        <aura:if isTrue="{!v.allGroup}">
+            
+            <aura:iteration items="{!v.recordWrapper}" var="recordFetch" indexVar="groupId">
+                
+                <div class="stageContainer">
+            <div class="slds-grid slds-grid_vertical">
+                <div>
+                    <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+                        <div class="slds-media__body column_header">
+                            <h1 class="slds-page-header__title slds-align-middle slds-truncate" title="{!recordFetch.key}">{!recordFetch.key}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <ul class="slds-has-dividers_around-space dropZone outerUL" style="height:1024px;" id="{!groupId}">
+                    <aura:iteration items="{!recordFetch.value}" var="recordvalues"  indexVar="indx">
+                        
+                        <li class="slds-item slds-m-around_small" draggable="true" ondragstart="{!c.recordBoxdrag}">
+                            
+                            
+                            <article class="slds-tile slds-tile_board">
+							
+                                <aura:set attribute="actions">
+                                    <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" label="Edit" id="{!indx}" onclick="{!c.handleEditRecord}">
+                                     <lightning:icon class="styleIcon" iconName="utility:edit" alternativeText="Edit"/>
+                                      <span class="slds-assistive-text">Edit</span>
+                                    </button>
+                                </aura:set>
+                                
+                                <aura:iteration items="{!recordvalues.recordlist}" var="record"> 
+                                    
+								<aura:if isTrue="{!record.subkey=='Name'}">
+                                    
+                                    <div class="slds-grid slds-truncate slds-text-heading--small slds-text-align--center" style="padding-top: 5px;padding-bottom: 3px;background-color: rgb(244, 246, 249);border-bottom:1px solid #d8dde6;">
+                                
+                                <div class="slds-col--padded slds-truncate" style="text-align:left;">
+                                    <h3 class="slds-truncate" title="{!record.subvalue}">
+                                    <a href="javascript:void(0);"  data-groupid="{!groupId}" data-index="{!indx}" onclick="{!c.doView}">
+                                        <span class="slds-truncate"  >{!record.subvalue}</span>
+                                        </a></h3>
+                                </div>
+                                
+                                    </div></aura:if>
+                                   
+								<div class="slds-tile__detail slds-text-body_small">
+                                     
+                                    <p class="slds-truncate">{!record.subkey}  : {!record.subvalue} 
+                                    </p>
+                                    
+                                </div>
+                                     <!--<li style="color:#A9A9A9;">
+                                      <label class="card-detail-label">{!record.subkey} :</label>
+                                       <span class="card-detail-value">{!record.subvalue}</span>  
+                                    </li>-->
+                                    </aura:iteration>
+                            </article>
+                        </li>
+                    </aura:iteration>
+                </ul>      
+                    </div></aura:iteration>
+                 </aura:if>
+        
+        
+         <aura:if isTrue="{!v.isLabelChange}">
+            
+            <aura:iteration items="{!v.boardWrapper}" var="recordFetch" indexVar="groupId">
+                
+                <div class="stageContainer">
+            <div class="slds-grid slds-grid_vertical">
+                <div>
+                    <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+                        <div class="slds-media__body column_header">
+                            <h1 class="slds-page-header__title slds-align-middle slds-truncate" title="{!recordFetch.key}">{!recordFetch.key}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <ul class="slds-has-dividers_around-space dropZone outerUL" style="height:1024px;" id="{!groupId}">
+                    <aura:iteration items="{!recordFetch.value}" var="recordvalues"  indexVar="indx">
+                        
+                        <li class="slds-item slds-m-around_small" draggable="true" ondragstart="{!c.recordBoxdrag}">
+                            
+                            
+                            <article class="slds-tile slds-tile_board">
+							
+                                <aura:set attribute="actions">
+                                    <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" label="Edit" id="{!indx}" onclick="{!c.handleEditRecord}">
+                                     <lightning:icon class="styleIcon" iconName="utility:edit" alternativeText="Edit"/>
+                                      <span class="slds-assistive-text">Edit</span>
+                                    </button>
+                                </aura:set>
+                                
+                                <aura:iteration items="{!recordvalues.recordlist}" var="record"> 
+                                    
+                                    
+								<aura:if isTrue="{!record.subkey=='Name'}">
+                                    
+                                    <div class="slds-grid slds-truncate slds-text-heading--small slds-text-align--center" style="padding-top: 5px;padding-bottom: 3px;background-color: rgb(244, 246, 249);border-bottom:1px solid #d8dde6;">
+                                
+                                <div class="slds-col--padded slds-truncate" style="text-align:left;">
+                                    <h3 class="slds-truncate" title="{!record.subvalue}">
+                                    <a href="javascript:void(0);" onclick="{!c.doView}">
+                                        <span class="slds-truncate">{!record.subvalue}</span>
+                                        </a></h3>
+                                </div>
+                                
+                                    </div></aura:if>
+                                   
+								<div class="slds-tile__detail slds-text-body_small">
+                                     
+                                    <p class="slds-truncate">{!record.subkey}   : {!record.subvalue} 
+                                    </p>
+                                    
+                                </div>
+                                     <!--<li style="color:#A9A9A9;">
+                                      <label class="card-detail-label">{!record.subkey} :</label>
+                                       <span class="card-detail-value">{!record.subvalue}</span>  
+                                    </li>-->
+                                        </aura:iteration>
+                            </article>
+                        </li>
+                    </aura:iteration>
+                </ul>      
+                    </div></aura:iteration>
+                 </aura:if>
+        
+        <aura:if isTrue="{!v.isFilterForNew}">
+            
+            <aura:iteration items="{!v.listOfCheckedGroup}" var="lstGrp">
+                
+                <aura:iteration items="{!v.recordWrapper}" var="recordFetch">  
+                    <aura:if isTrue="{!(recordFetch.key==lstGrp.groupField)}">
+                        
+                            <div class="stageContainer">
+                                <div class="slds-grid slds-grid_vertical">
+                                    <div>
+                                        <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+                                            <div class="slds-media__body column_header">
+                                                <h1 class="slds-page-header__title slds-align-middle slds-truncate" title="{!recordFetch.key}">{!recordFetch.key}</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="slds-has-dividers_around-space dropZone outerUL" style="height:1024px;">
+                                    <aura:iteration items="{!recordFetch.value}" var="recordvalues">
+                                        <li class="slds-item slds-m-around_small" draggable="true" ondragstart="{!c.recordBoxdrag}">
+                                            <article class="slds-tile slds-tile_board">
+                                                <aura:set attribute="actions">
+                                                    <lightning:button label="New"/>
+                                                </aura:set>
+                                                <aura:iteration items="{!recordvalues.recordlist}" var="record">
+                                                    <aura:if isTrue="{!record.subkey=='Name'}">
+                                                        
+                                                        <div class="slds-grid slds-truncate slds-text-heading--small slds-text-align--center" style="padding-top: 5px;padding-bottom: 3px;background-color: rgb(244, 246, 249);border-bottom:1px solid #d8dde6;">
+                                                            
+                                                            <div class="slds-col--padded slds-truncate" style="text-align:left;">
+                                                                <h3 class="slds-truncate" title="{!record.subvalue}">
+                                                                    <a href="javascript:void(0);" onclick="{!c.doView}">
+                                                                        <span class="slds-truncate">{!record.subvalue}</span>
+                                                                    </a></h3>
+                                                            </div>
+                                                            
+                                                        </div></aura:if>
+                                                    <div class="slds-tile__detail slds-text-body_small">
+                                                        
+                                                        <p class="slds-truncate">{!record.subkey}  : {!record.subvalue} 
+                                                        </p>
+                                                        
+                                                    </div>
+                                                </aura:iteration>
+                                            </article>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>     
+                        </div></aura:if>
+                </aura:iteration> </aura:iteration>
+            
+        </aura:if>
+        
+        
+        <aura:if isTrue="{!v.isFilterForLbl}">
+            <aura:iteration items="{!v.listOfCheckedGroup}" var="lstGrp">
+                <aura:iteration items="{!v.boardWrapper}" var="recordFetch" indexVar="groupId">
+                    <aura:if isTrue="{!(recordFetch.key==lstGrp.groupField)}">
+                        <div class="stageContainer">
+                            <div class="slds-grid slds-grid_vertical">
+                                <div>
+                                    <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+                                        <div class="slds-media__body column_header">
+                                            <h1 class="slds-page-header__title slds-align-middle slds-truncate" title="{!recordFetch.key}">{!recordFetch.key}</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                <ul class="slds-has-dividers_around-space dropZone outerUL" style="height:1024px;" id="{!groupId}">
+                    <aura:iteration items="{!recordFetch.value}" var="recordvalues"  indexVar="indx">
+                        <li class="slds-item slds-m-around_small" draggable="true" ondragstart="{!c.recordBoxdrag}">
+                            <article class="slds-tile slds-tile_board">
+                                <aura:set attribute="actions">
+                                    <button class="slds-button slds-button_icon slds-button_icon-border-filled styleButton" label="Edit" id="{!indx}" onclick="{!c.handleEditRecord}">
+                                     <lightning:icon class="styleIcon" iconName="utility:edit" alternativeText="Edit"/>
+                                      <span class="slds-assistive-text">Edit</span>
+                                    </button>
+                                </aura:set>
+                                <aura:iteration items="{!recordvalues.recordlist}" var="record"> 
+                                    
+                                    <aura:if isTrue="{!record.subkey=='Name'}">
+                                    
+                                    <div class="slds-grid slds-truncate slds-text-heading--small slds-text-align--center" style="padding-top: 5px;padding-bottom: 3px;background-color: rgb(244, 246, 249);border-bottom:1px solid #d8dde6;">
+                                
+                                <div class="slds-col--padded slds-truncate" style="text-align:left;">
+                                    <h3 class="slds-truncate" title="{!record.subvalue}">
+                                    <a href="javascript:void(0);" onclick="{!c.doView}">
+                                        <span class="slds-truncate">{!record.subvalue}</span>
+                                        </a></h3>
+                                </div>
+                                
+                                    </div></aura:if>
+                                    
+                                    <div class="slds-tile__detail slds-text-body_small">
+                                     
+                                    <p class="slds-truncate">{!record.subkey}  : {!record.subvalue} 
+                                    </p>
+                                    
+                                </div>
+                                    
+                                     <!--<li style="color:#A9A9A9;">
+                                      <label class="card-detail-label">{!record.subkey} :</label>
+                                       <span class="card-detail-value">{!record.subvalue}</span>  
+                                    </li>-->
+                                </aura:iteration>
+                            </article>
+                        </li>
+                    </aura:iteration>
+                </ul>      
+            </div>
+                    </aura:if>
+                </aura:iteration>
+            </aura:iteration>
+        </aura:if>
+    </div>
+    
+    <!--Side Panel Start-->
+    <!--Add Button-->
+    <aura:if isTrue="{!v.isTrue}">         
+        <div id="filterDiv" class="sidenav">  
+            <aura:if isTrue="{!v.Spinner}">
+                <div aura:id="spinnerId" class="slds-spinner_container">
+                    <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                        <span class="slds-assistive-text">Please Wait</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+            
+            <div class="slds-form-element slds-m-left_small slds-m-right_small">
+                <lightning:select aura:id="selectObj" name="select" value="{!v.selectedObject}" onchange="{!c.onobjselect}" label="Select Object">
+                    <aura:iteration items="{!v.objlist}" var="objname">
+                        <option text="{!objname}"></option>
+                    </aura:iteration>
+                </lightning:select>
+            </div><br/>            
+            <div class="slds-form-element slds-m-left_small slds-m-right_small " style="margin-top: -10px;">
+                <lightning:select aura:id="lst" name="select" class="sideView" value="{!v.selectedListView}" label="Select ListView" onchange="{!c.onListViewChange}">
+                    <aura:iteration items="{!v.listViewRecords}" var="objname">
+                        <option selected="{!objname.selected}" value="{!objname}">{!objname}</option> 
+                    </aura:iteration>
+                </lightning:select>
+               
+            </div><br/> 
+            <div class="slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top: -10px;">       
+                <lightning:select aura:id="grp" name="groupby" value="{!v.selectedGroupField}" label="Group By" class="grpBy" onchange="{!c.onGroupChange}">
+                    <aura:iteration items="{!v.groupByRecords}" var="groupRecords">
+                        <option selected="{!groupRecords.selected}" value="{!groupRecords}">{!groupRecords}</option>
+                    </aura:iteration>
+                </lightning:select>
+                <!--<ui:inputSelect class="single" change="{!c.onGroupChange}" value="{!v.selectedGroupField}" label="Group By">
+                    <aura:iteration items="{!v.groupByRecords}" var="groupRecords">
+                        
+                        <ui:inputSelectOption text="{!groupRecords}"/>
+                    </aura:iteration>
+                    
+                </ui:inputSelect>-->
+            </div><br/>           
+            <div class="slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top: -10px;">
+                <lightning:select name="select" value="{!v.selectedSummaryField}" label="Summary Fields" onchange="{!c.onSummaryChange}">
+                   
+                    <aura:iteration items="{!v.summaryFieldRecords}" var="summaryfields">
+                        <option text="{!summaryfields}"></option>
+                    </aura:iteration>
+                </lightning:select>
+                <div class="slds-text-color_destructive slds-hide" aura:id="SummaryField-error-01">This field is required</div>
+                
+            </div><br/>
+            
+            <!-- Template Field-->
+            <div class="slds-form-element slds-m-left_small slds-m-right_small">  
+                <!--Input Field-->
+                <label class="slds-form-element__label" for="templatesearch">
+                    <abbr class="slds-required" title="required">* </abbr>Template Fields</label>
+                <div aura:id="lookupField" onkeyup="{!c.handleKeyUpForTemplateField}" class="slds-show">  
+                    <lightning:input id="templatesearch"  class="slds-m-top_none" aura:id="enter-search" name="enter-search" value="{!v.searchTemplateField}" type="search"/>
+                       
+                </div>
+                
+                <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                    <lightning:pill class="pillSize" label="{!v.checkedTemplateFieldLength +' Selected'}"  onremove="{! c.clear }"></lightning:pill>
+                </div>
+                <div aura:id="dropTemplateFieldId" class="slds-dropdown slds_col slds-scrollable" style="height:9rem;width:100%;postion:absolute;top:52px" onmouseenter="" onmouseleave="{!c.handleMouseLeaveTemplateFields}">  
+                    <ul role="menu" style="margin-left:7px;" aura:id="tempId">
+                        <aura:iteration items="{!v.TemplateFieldValues}" var="template">
+                            <li>
+                                <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                    <label class="slds-checkbox" >
+                                        <ui:inputCheckbox  value="{!template.checked}" change="{!c.templateCheckboxHandler}"/>
+                                        <span class="slds-checkbox--faux" />
+                                    </label>
+                                    <span class="slds-media__body">  
+                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!template.templateFields}</span>
+                                    </span>
+                                </span>
+                            </li>
+                        </aura:iteration>
+                    </ul>
+                </div>
+                <div class="slds-text-color_destructive"><span>{!v.error}</span></div>
+            </div><br/>
+            
+            
+            <!-- Label Field -->
+            <div aura:id="labelfield" class="slds-m-top_x-large slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top:1px;">
+                <lightning:input aura:id="LabelInputField" class="inputLabel sideView" name="Label" value="{!v.inputLabel}" placeholder="Enter Label" label="Enter Label" />
+            </div><br/> 
+            
+            <lightning:button class="slds-m-top_x-small slds-m-left_small slds-m-right_medium slds-float_right" variant="brand" label="Save" title="Save" onclick="{!c.saveBoardRecord}"/>
+            
+            
+            <lightning:button class="slds-m-top_x-small slds-m-left_small slds-m-right_medium slds-float_right" variant="Neutral" label="Cancel" title="Cancel" onclick="{!c.CloseModel}"/>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isEditBoard}">         
+        <div id="filterDivForEdit" class="sidenav">  
+            <c:BoardAnythingEditComponent selectedTempList = "{!v.selectedTemplateFields}" isSpinner = "{!v.spinnerForEdit}" checkedTemplateFieldLength="{!v.checkedTemplateFieldLength}" TemplateFieldValues="{!v.TemplateFieldValues}" boardId="{!v.boardId}" selectEditGroup="{!v.selectEditGroup}" selectEditInput="{!v.selectEditInput}" selectEditSummary="{!v.selectEditSummary}" selectEditListView="{!v.selectEditListView}" selectEditObject="{!v.selectEditObject}" handleBoard="{!v.handleBoard}" objlist="{!v.objlist}" listViewRecords="{!v.listViewRecords}" checkedGroupFields="{!v.checkedGroupFields}" groupByRecords="{!v.groupByRecords}" summaryFieldRecords="{!v.summaryFieldRecords}"/>
+        </div></aura:if>
+    
+    <aura:if isTrue="{!v.ShowModule}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        
+                        <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{! c.HideMe }" 
+                                              alternativeText="Close" class="slds-modal__close" />
+                        
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Template Layout</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                        <!--<lightning:select name="Set Maximum Limit For Template Fields" value="{!v.setFieldLimit}" label="Set Maximum Limit For Template Fields" >
+                            <aura:iteration items="{!v.setFieldLimit}" var="temp">
+                                <option text="{!temp}"></option>
+                            </aura:iteration>
+                        </lightning:select>-->
+                        <lightning:input type="number" name="Template Limit" label="Set Maximum Limit For Template Fields" placeholder="type here..." value="{!v.setFieldLimit}"/>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                        <p>Rearrange Template Fields</p>
+                        <ul class="recordbox tempSetUL">
+                            <aura:iteration items="{!v.selectedTemplateFields}" var="selField">
+                                <li class="slds-truncate slds-text-heading--label templateSetting slds-float--left ui-sortable-handle makeItDrag" draggable="true" ondragstart="{!c.recordBoxdragForTemplate}" id="{!selField}">{!selField}</li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{! c.HideMe }">Close</button>
+                        <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.saveRearrangeTempFields}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+        
+    </aura:if>   
+    <aura:if isTrue="{!v.isGroup}">
+        <div id="filterDivForGroup" class="sidenav">  
+            <c:FilterBoardComponent groupContainList="{!v.groupContainList}"/>
+            
+        </div></aura:if>
+    
+    <aura:if isTrue="{!v.isDelete}">
+    <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        
+						<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Delete Board</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+					<div id="messageText" style="font-size:1.1em;">Are you sure ?</div>
+					</div>
+                     <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{! c.HideMe }">Cancel</button>
+                        <lightning:button variant="brand" label="ok" title="ok" onclick="{!c.deleteBoard}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+    
+   
+</aura:component>

@@ -1,0 +1,16 @@
+<aura:component >
+	 <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+          
+							<thead >
+                                <tr><th scope="col">Contact</th>
+                                <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+								<tr class="slds-text-title_caps">
+									<th scope="col"><div class="slds-truncate" title="SalesIntel Ddata Fields"><b>SALESINTEL FIELD</b></div></th>
+									<th scope="col"><div class="slds-truncate" title="Salesforce Leads Data Fields"><b>SALESFORCE FIELD</b></div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Salesforce Leads Data Fields"><b>ALLOW OVERWRITE</b></div></th>
+                                   
+								</tr>
+         </thead> </table>
+</aura:component>

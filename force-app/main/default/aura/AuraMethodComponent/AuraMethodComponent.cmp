@@ -1,0 +1,9 @@
+<aura:component controller="AuraMethodController">
+    <aura:handler name ="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="defaultParamers" action="{!c.loadDefaultParams}">
+        <aura:attribute type="String" name="header" default="Salesforce Header" />
+        <aura:attribute type="String" name="footer" default="Salesforce Footer" />
+        <aura:attribute type="String" name="title" default="Salesforce" />
+    </aura:method>
+    
+</aura:component>

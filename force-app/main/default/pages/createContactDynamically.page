@@ -1,0 +1,62 @@
+<apex:page controller="createContactDynamically"  showHeader="false" sidebar="false" lightningStylesheets="true">
+ <script>
+    var previousOnload =  window.onload;
+     window.onload = function(){ if(previousOnload==true){previousOnload();}
+                                alert('gggc');}
+    </script>
+       <apex:pageBlock id="rec">
+           <apex:pageBlockSection title="Account Record" id="ac">
+                <apex:form id="frm" >
+           <apex:pageBlockTable value="{!AccountRec}" var="acc">
+               <apex:column headerValue="Name">
+                   <apex:inputField value="{!acc.name}" required="false"/>
+               </apex:column>
+               <apex:column headerValue="Industry">
+                   <apex:inputField value="{!acc.industry}"/>
+               </apex:column>
+               <apex:column headerValue="Type">
+                   <apex:inputField value="{!acc.type}"/>
+               </apex:column>
+               <apex:column headerValue="Description">
+                   <apex:inputField value="{!acc.description}"/>
+               </apex:column>
+               </apex:pageBlockTable>
+               <center>
+                   
+               <apex:commandButton value="Save" action="{!SaveAcc}" reRender="frm" /></center>
+         </apex:form>
+               </apex:pageBlockSection>
+        
+        
+  
+           <apex:pageBlockSection title="Contact Record">
+                 <apex:form id="cnn" >
+           <apex:pageBlockTable value="{!wrppr}" var="wr">
+               <apex:column headerValue="FirstName">
+               <apex:inputField value="{!wr.con.firstname}"/>
+               </apex:column>
+                <apex:column headerValue="LastName">
+               <apex:inputField value="{!wr.con.lastname}" required="false"/>
+               </apex:column>
+                <apex:column headerValue="Department">
+               <apex:inputField value="{!wr.con.Department}"/>
+               </apex:column>
+                <apex:column headerValue="Title">
+               <apex:inputField value="{!wr.con.Title}"/>
+               </apex:column>
+               <apex:column headerValue="Action">
+               <apex:commandButton value="Delete" action="{!Remove}" reRender="rec">
+                   <apex:param value="{!wr.rcount}" name="count" assignTo="{!count}"/></apex:commandButton>
+               </apex:column>
+               </apex:pageBlockTable>
+                  <apex:commandButton value="Add Row" action="{!AddRow}" reRender="rec"/>
+              <apex:commandButton value="Save" action="{!submit}" reRender="cnn"/>
+        
+          
+    </apex:form>
+               </apex:pageBlockSection>
+           </apex:pageBlock>
+        
+    
+        
+</apex:page>

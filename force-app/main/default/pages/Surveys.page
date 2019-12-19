@@ -1,0 +1,530 @@
+<apex:page controller="SurveysController" cache="false" sidebar="false" showheader="false" title="{!pageTitle}" >
+
+   <!-- <apex:includeScript value="{! $Resource.SurveyForce_jquery}"/> -->
+    <!-- convertCheckBoxToLDS() is in surveyforce.js -->
+   <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"/>
+    <apex:includeScript value="{! $Resource.Survey + '/surveyforce.js'}"/>
+    <apex:stylesheet value="{! $Resource.Survey + '/surveyforce.css'}"/>
+    <apex:stylesheet value="{! $Resource.Survey + '/surveyforce_pagemessage_override.css'}"/>
+    <apex:stylesheet value="{! $Resource.Survey_SLDS + '/assets/styles/salesforce-lightning-design-system-vf.min.css'}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <apex:slds /> 
+    
+     <style>
+       <!-- <apex:outputText value="{!HTMLENCODE(surveyContainerCss)}" escape="false"/> -->
+        body{
+        font-family: Arial!important;
+        }
+        .grad1 {
+        height: 280px;
+        background-color: #3677FF; /* For browsers that do not support gradients */
+        background-image: linear-gradient(50deg, #3677FF
+        , #00b050); /* Standard syntax (must be last) */
+        }   
+
+        .gradfooter {
+        height: auto;
+        background-color: #3677FF; /* For browsers that do not support gradients */
+        background-image: linear-gradient(50deg, #3677FF
+        , #00b050); /* Standard syntax (must be last) */
+        font-size: 16px;
+        font-family: Arial;
+        }   
+        
+        .msgIcon {
+        display: none!important
+        }
+       .customMessage * {
+        color: #ffff!important
+        }
+        .customMessage {
+        color: #ffff!important;
+        }
+        .message {
+         background-color: #C23934 !important;
+        opacity: 1;
+        }
+         .message .messageText{
+         margin-left:8px;
+         color: #ffff!important;
+         }
+         
+         .message .messageText h4{
+         color: #ffff!important;
+         }
+        .radioInput label{ 
+            display: block;
+            font-family: Arial;
+            font-size: 16px;
+
+         }
+
+         .radioInput td{ 
+            text-align: center;
+
+         }
+
+
+        #wrapper {
+            width: 100%;  
+        }
+        #survey_container {
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .buttonStyle {
+            background:    #ffffff;
+            border-radius: 18px;
+            box-shadow:    0 0px #444444;
+            padding:       8px 41px;
+            color:         #ffffff;
+            display:       inline-block;
+            font:          normal 700 19px/1 "Calibri", sans-serif;
+            text-align:    center;
+           
+        }
+
+         .radio input[type="radio"] {
+         appearance: none;
+         -moz-appearance: none;
+         -webkit-appearance: none;
+         width: 15px;
+         height: 15px;
+         border-radius: 10px;
+         outline: none;
+         box-shadow: inset 0 0 0 2px #FFF;
+         border: 1px solid #242623;
+         }
+         input[type=radio]:checked {
+         background-color: #242623;
+         }
+
+         .btn {
+            padding-left: 60px !important;
+            padding-right: 60px !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+         }
+
+      <!--   @media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    table, thead, tbody, th, td, tr { 
+        display: block; 
+    }
+    
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    tr { border: 1px solid #ccc; }
+    
+    td { 
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee; 
+        position: relative;
+        padding-left: 50%; 
+    }
+    
+    td:before { 
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+    } -->
+         
+    </style>
+
+    <script>
+    $(document).ready(function(){
+        
+        //Convert any elements with "convertToLDS" style to SLDS styles
+        //Used in certain places where it's not easy to use SLDS for those elements like "apex:selectCheckboxes"
+        //convertCheckBoxToLDS();
+        
+        overridePageMessages();
+    });
+    
+    function overridePageMessages(){   
+        var textureEffect = '';
+        textureEffect = 'slds-theme--alert-texture';
+        
+        $('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage '+textureEffect);         
+        $('.confirmM3').addClass('slds-notify slds-notify--alert slds-theme--success  customMessage '+textureEffect);   
+        $('.errorM3').addClass('slds-notify slds-notify--alert slds-theme--error customMessage '+textureEffect);                 
+        $('.infoM3').addClass('slds-notify slds-notify--toast customMessage '+textureEffect);   
+        
+        $('.warningM3').removeClass('warningM3');
+        $('.confirmM3').removeClass('confirmM3');    
+        $('.errorM3').removeClass('errorM3');
+        $('.infoM3').removeClass('infoM3'); 
+        
+    }
+    
+    function getChildQuestionHelper(questionId, selectedOption){
+        showProgress();
+        console.log('questionId *****' + questionId);
+        console.log('selectedOption *****' + selectedOption);
+        getChildQuestions(questionId,selectedOption);
+    }
+    
+    function showProgress() {
+        $('#waiting').show();
+    }
+    
+    function hideProgress() {
+        $('#waiting').hide();
+    }
+
+    </script>
+    <!-- Custom CSS added by survey admin -->
+                        <!-- Spinner code -->
+    <div id="waiting" style="display: none;" > 
+        <div class="slds-spinner_container" style="height: 100%; position: fixed;">
+            <div role="status" class="slds-spinner slds-spinner_large ">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </div>
+    <div >
+        
+    
+    <div  align="center">
+        <apex:image url="{!$Resource.Survey_Page_Header_En}" rendered="{!language == 'en'}"/>   
+        <apex:image url="{!$Resource.Survey_Page_Header_Fr}" rendered="{!language != 'en'}"/>   
+       <!-- <apex:outputText value="SELF - ASSESSMENT" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'en'}" />
+        <apex:outputText value="AUTO-ÉVALUATION" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language != 'en'}"/> 
+        <BR/>  
+        <apex:outputText value="DIGITAL TRANSFORMATION" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'en'}"/>
+        <apex:outputText value="VIRAGE NUMÉRIQUE" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language != 'en'}"/> -->
+        <div >
+        <table style="width: 75%;">
+                <tr>
+                    <td style="width: 50%; text-align: right;">
+                        <apex:image url="{!$Resource.Report_DTSA_FR}" rendered="{!language != 'en'}" style="margin-top: 35px; margin-bottom: 35px; margin-right: 9px;"/>
+                        <apex:image url="{!$Resource.Report_DTSA_EN}" rendered="{!language == 'en'}" style="margin-top: 35px; margin-bottom: 35px;margin-right: 9px;"/>
+                    </td>
+                    <td style="padding-left: 10px; text-align: left">
+                        <div style="width: 500px;">
+                        <apex:outputPanel rendered="{!language == 'en'}" >
+                            <p style=" font-family: Arial;font-size: 16px; font-weight: bold;">The Digital Transformation Self-Assessment is a short questionnaire that will:</p>
+                            <div style="padding-left: 10px;">
+                                <ol style=" font-family: Arial;font-size: 16px; padding-left: 12px; list-style: decimal;">
+                                    <li style="font-family: Arial;font-size: 16px; ">Illustrate where you stand today, from 0-100%.</li>
+                                    <li style=" font-family: Arial;font-size: 16px;">Show you how you are doing in your department (whether you work in sales, customer service, accounting, HR, document management or marketing).</li>
+                                    <li style=" font-family: Arial;font-size: 16px;">Help you identify areas where you can make productivity gains.</li>
+                                </ol>
+                            </div>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!language != 'en'}">
+                            <p style=" font-family: Arial;font-size: 16px; font-weight: bold;">L'auto-évaluation sur votre virage numérique est un bref questionnaire qui vous révélera:</p>
+                            <ol style=" font-family: Arial;font-size: 16px; padding-left: 25px;width:95%; list-style: decimal;">
+                                <li style=" font-family: Arial;font-size: 16px;">Où vous en êtes aujourd’hui, de 0 à 100 %.</li>
+                                <li style=" font-family: Arial;font-size: 16px;">Comment ça se passe dans votre service (que ce soit les ventes, le service à la clientèle, la comptabilité, les RH, la gestion de documents ou le marketing).</li>
+                                <li style=" font-family: Arial;font-size: 16px;">Les secteurs où vous pouvez gagner en productivité.</li>
+                            </ol>
+                        </apex:outputPanel>
+                    </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </div>
+
+        <div align="center">
+            <div style="max-width: 1000px;" >
+
+            <div id="survey_container" class="surveyforce">
+                <apex:outputPanel id="seeSurvey">
+                 <apex:outputPanel >
+                        <div class="slds">
+                            <apex:pageMessages />
+                        </div>
+                      <!--  <c:uiMessage severity="success" message="{!surveyThankYouText}" renderMe="{!thankYouRendered == true}" /> -->
+                    </apex:outputPanel>
+                </apex:outputPanel>
+                <!-- Spinner code -->
+                
+                <apex:form id="theForm">
+                    <!--
+                        <apex:outputPanel id="seeSurvey" rendered="{! If((Survey__c.Hide_Survey_Name__c == false || Survey__c.Survey_Header__c != ''), True, False )}" >
+                        <div class="slds-box slds-theme--shade">
+                        <div class="slds-text-heading--large"><apex:outputText value="{!Survey__c.Survey_Header__c}" escape="false" /> </div>
+                        <apex:outputPanel rendered="{!Survey__c.Hide_Survey_Name__c == false}">
+                        <div class="slds-text-heading--medium">{!Survey__c.Name}</div>
+                        </apex:outputPanel>
+                        </div>
+                        </apex:outputPanel>
+                    -->
+                    <apex:actionFunction action="{!showChildQuestions}" name="getChildQuestions" rerender="theForm" oncomplete="hideProgress()">
+                        <apex:param name="selectedQuestion" value=""/>
+                        <apex:param name="selectedOption" value=""/>
+                    </apex:actionFunction>
+                    <apex:outputPanel rendered="{!thankYouRendered == false}">
+                        <div class="slds-form--stacked" style="text-align:left;">
+                            <apex:repeat value="{!allQuestions}" var="qPreview" id="aQPreview">
+                                <div class="slds-box slds-theme--default">
+                                    <div>
+
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">
+                                                <apex:outputText value=" {!qPreview.orderNumber + '. ' + qPreview.question} " style="font-weight: bold; font-size: 16px; color: black; font-family: Arial" />
+                                                <apex:outputText rendered="{!AND(qPreview.required)}" value="*" style="color: red" />
+                                            </label>
+                                        </div>
+                                        <apex:outputPanel rendered="{!qPreview.renderSelectRadio}" >
+                                            <apex:selectRadio styleClass="convertToLDS mandatory radioInput slds-radio_faux radio"  layout="pageDirection" rendered="{!qPreview.renderSelectRadio}" value="{!qPreview.selectedOption}" style="font-family: Arial">
+                                                <apex:selectOptions value="{!qPreview.singleOptions}"/>
+                                            </apex:selectRadio>
+                                        </apex:outputPanel>
+                                        
+                                        <apex:outputPanel rendered="{!AND(qPreview.renderSelectCheckboxes == 'true', qPreview.skipQuestion)}" >
+                                            <apex:selectCheckboxes styleClass="convertToLDS mandatory" layout="pageDirection" rendered="{!qPreview.renderSelectCheckboxes}" value="{!qPreview.selectedOptions}" onclick="getChildQuestionHelper('{!qPreview.id}', '{!qPreview.selectedOptions}')">
+                                                <apex:selectOptions value="{!qPreview.multiOptions}" />
+                                            </apex:selectCheckboxes>
+                                        </apex:outputPanel>
+                                        
+                                        <apex:outputPanel rendered="{!AND(qPreview.renderSelectCheckboxes == 'true', NOT(qPreview.skipQuestion))}" >
+                                            <apex:selectCheckboxes styleClass="convertToLDS mandatory"  layout="pageDirection" rendered="{!qPreview.renderSelectCheckboxes}" value="{!qPreview.selectedOptions}">
+                                                <apex:selectOptions value="{!qPreview.multiOptions}" />
+                                            </apex:selectCheckboxes>
+                                        </apex:outputPanel>
+                                        
+                                        <apex:outputPanel rendered="{!qPreview.renderFreeText}">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control" >
+                                                    <apex:inputTextArea styleClass="slds-textarea mandatory" cols="" rows="{!qPreview.noOfRowsForTextArea}" rendered="{!qPreview.renderFreeText}" value="{!qPreview.freeTextArea}"/>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel style="text-align: center;" rendered="{!AND(qPreview.renderSelectRow == 'true', qPreview.skipQuestion != true)}">
+                                            <apex:selectRadio styleClass="convertToLDS mandatory radioInput radio"  rendered="{!qPreview.renderSelectRow}" value="{!qPreview.selectedOption}">
+                                                <apex:selectOptions value="{!qPreview.rowOptions}"/>
+                                            </apex:selectRadio>
+                                        </apex:outputPanel>
+                                    </div>
+                                    <apex:outputPanel rendered="{!AND(qPreview.skipQuestion == true)}">
+                                        <apex:repeat value="{!qPreview.childQuestions}" var="level2">
+                                            <apex:outputPanel rendered="{!level2.isShow}">
+                                                <table> 
+                                                    <thead>
+                                                        <tr style="display: table-row;">
+                                                            <td >
+                                                                <apex:outputText value="{!qPreview.orderNumber}.{!level2.orderNumber}" style="font-weight: bold; font-family: Arial"/>  &nbsp;
+                                                                <apex:outputText value="{!level2.question}" style="font-weight: bold;"/>
+                                                                 <apex:outputText rendered="{!AND(level2.required)}" value="*" style="color: red" />
+                                                            </td>
+                                                            <th >
+                                                                <table>
+                                                                    <tr align="center" style="text-align: center;">
+                                                                        <apex:repeat value="{!level2.matrixAnswers}" var="ans">
+                                                                            <td style="text-align: center;">
+
+                                                                              
+
+                                                                             <div align="center" style=" white-space: normal; white-space: normal; visibility: visible; word-wrap:break-word; width:140px;  overflow-wrap: break-word; text-align: center;">
+                                                                                    {!ans}
+                                                                               </div>
+                                                                            </td>
+                                                                        </apex:repeat>
+                                                                    </tr>
+                                                                </table>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <apex:repeat value="{!level2.childQuestions}" var="level3">
+                                                            <tr  style="border-top-style:solid; border-color: #E2E1E1; border-width: 1px;"  >
+                                                                <td >
+                                                                    <apex:outputText style="font-family: Arial" value="{!level3.question}" />
+                                                                    <apex:outputText rendered="{!AND(level3.required)}" value="*" style="color: red" />
+                                                                </td>
+                                                                <td style="padding: 15px; text-align: center;   ">
+                                                                    <apex:selectRadio styleClass="convertToLDS mandatory radioInput radio"  rendered="{!level3.renderSelectRow}" value="{!level3.selectedOption}">
+                                                                        <apex:selectOptions value="{!level3.rowOptions}"/>
+                                                                    </apex:selectRadio>               
+                                                                </td>
+                                                            </tr>
+                                                        </apex:repeat>                                          
+                                                    </tbody>
+                                                </table>
+                                            </apex:outputPanel>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </div>
+                            </apex:repeat>
+                                <div class="gradfooter" style="text-align: center;padding: 5px;">
+                                    <table  style="margin: 0 auto; margin-left: 33.5%">
+                                        <div><br/>
+                                            
+                                            <apex:outputText value="Please fill this form and click Submit to get your report with detailed results." style="color:white; font-weight: bold; font-size: 20px;" rendered="{!language == 'en'}"/>
+
+                                             <apex:outputText value="Veuillez remplir ce formulaire et appuyer sur Soumettre pour obtenir votre rapport avec résultats détaillés." style="color:white; font-weight: bold; font-size: 20px;" rendered="{!language != 'en'}"/>
+                                       </div>
+                                            <br/>
+                                        
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="First name" rendered="{!language == 'en'}"/>
+                                                <apex:outputText style="color:white;" value="Prénom" rendered="{!language == 'fr'}"/>
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td scope="col" style="margin: 10px;">
+                                                <apex:inputField value="{!led.FirstName}" style="margin: 10px;"/>  
+                                            </td>
+                                        </tr>
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="Last name" rendered="{!language == 'en'}"/>
+                                                <apex:outputText style="color:white;" value="Nom" rendered="{!language == 'fr'}"/>
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td>
+                                                <apex:inputText value="{!led.LastName}" style="margin: 10px;"/> 
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="Job title" rendered="{!language == 'en'}"/>
+                                                
+                                                <apex:outputText style="color:white;" value="Emploi / Poste" rendered="{!language != 'en'}"/>
+                                            </td>
+                                            <td >
+                                                <apex:inputField value="{!led.Title}" style="margin: 10px;" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="{!$ObjectType.Lead.fields.Email.Label}" rendered="{!language == 'en'}"/>
+                                                <apex:outputText style="color:white;" value="Courriel" rendered="{!language == 'fr'}"/>
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td>
+                                                <apex:inputField value="{!led.Email}" style="margin: 10px;" />  
+                                            </td>
+                                        </tr>
+                                        <!--<tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="{!$ObjectType.Contact.fields.Field_of_interest__c.Label}" rendered="{!language == 'en'}"/>
+
+                                                <apex:outputText style="color:white;" value=" Champ d'intérêt" rendered="{!language != 'en'}"/>
+
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td scope="col" >
+                                                <apex:inputField value="{!cont.Field_of_interest__c}" style="margin: 10px; width: 185px;" />
+                                            </td>
+                                        </tr>-->
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" rendered="{!language == 'en'}" value="Phone" />
+                                                <apex:outputText style="color:white;" rendered="{!language != 'en'}" value="Téléphone" > </apex:outputText>
+                                            </td>
+                                            <td>
+                                                <apex:inputField value="{!led.Phone}" style="margin: 10px;"/>  
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="{!$ObjectType.Lead.fields.Field_of_interest__c.Label}" rendered="{!language == 'en'}"/>
+                                                
+                                                <apex:outputText style="color:white;" value=" Champ d'intérêt" rendered="{!language != 'en'}"/>
+                                                
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td >
+                                                <apex:inputField value="{!led.Field_of_interest__c}" style="margin: 10px; width:185px;" />
+                                            </td>
+                                        </tr>
+                                        <tr >
+                                            <td scope="col" style="width: 20% ">
+                                                <apex:outputText style="color:white;" value="{!$ObjectType.Lead.fields.Company.Label}" rendered="{!language == 'en'}"/>
+                                                
+                                                <apex:outputText style="color:white;" value=" Compagnie" rendered="{!language != 'en'}"/>
+                                                
+                                                <span style="color:white;" >*</span>
+                                            </td>
+                                            <td >
+                                                <apex:inputText value="{!led.Company}" style="margin: 10px;" />
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                    <br/>
+                                    <br/>
+                                    <div style="text-align: center;">
+                                        <apex:commandButton styleClass="slds-button slds-button_neutral" style="font-weight: bold;font-family: Arial; font-size: 20px;" action="{!submitResults}" value="SUBMIT"   rerender="seeSurvey" onclick="showProgress();" oncomplete="hideProgress();" rendered="{!language == 'en'}"/>
+
+                                        <apex:commandButton styleClass="slds-button slds-button_neutral" style="font-weight: bold;font-family: Arial; font-size: 20px;" action="{!submitResults}" value="SOUMETTRE" rerender="seeSurvey" onclick="showProgress();" oncomplete="hideProgress();" rendered="{!language != 'en'}"/>
+                                    </div><br/>
+                                </div>
+                            </div>
+                        
+                    </apex:outputPanel>
+                    <apex:outputPanel id="submitSection" >
+                        <apex:outputPanel rendered="{!thankYouRendered == false}">
+                            <div class="slds-box slds-theme--default" style="text-align: center;">
+                                <!--  <apex:outputPanel rendered="{!isInternal}" >
+                            <span class="slds-text-body--regular">{!$Label.LABS_SF_Answer_as}:</span>
+                            <apex:selectRadio styleClass="convertToLDS" value="{!anonymousAnswer}">
+                            <apex:selectOptions value="{!anonymousOrUser}" />
+                            <apex:actionSupport event="onchange" rerender="hiddenAnonymousAnswer"/>
+                            </apex:selectRadio>
+                            <apex:inputHidden value="{!anonymousAnswer}" id="hiddenAnonymousAnswer"/>
+                            <br />
+                            </apex:outputPanel> -->
+                                
+
+                            </div>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                <!--    <apex:outputPanel id="thankYouSection"> 
+                        <apex:outputPanel rendered="{!thankYouRendered == true}">
+                         <div class="slds-box slds-theme--default grad1" style="min-width: 20%; text-align: center;" >
+                                
+
+                                <apex:outputText value="Thank you for doing the Digital Transformation Self-Assessment survey." style="font-size: 20px; color: white" rendered="{!language == 'en'}" />
+                                 <apex:outputText value="Merci d'avoir participé à l'enquête d'auto-évaluation sur la transformation numérique." style="font-size: 20px; color: white" rendered="{!language == 'fr'}"/>
+                                 <br/> <br/>
+
+                                <apex:outputText value="You will receive your detailed report by email shortly!" style="font-size: 20px; color: white" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Vous recevrez votre rapport détaillé par email sous peu!" style="font-size: 20px; color: white" rendered="{!language == 'fr'}"/>
+                                <br/>
+                                <br/>
+                                <apex:outputPanel rendered="{!language == 'en'}">
+                                     <button class="buttonStyle" formaction="http://www.soljit.com">Back To SOLJIT.com</button> 
+                                </apex:outputPanel>
+
+                                <apex:outputPanel rendered="{!language == 'fr'}">
+                                     <button class="buttonStyle" formaction="http://www.soljit.com/fr">Retour à SOLJIT.com</button> 
+                                </apex:outputPanel>
+                               
+
+                         </div>
+                        </apex:outputPanel>
+                    </apex:outputPanel> -->
+                </apex:form>
+                     
+            </div>
+        </div>
+        </div>  
+       
+    </div>
+</apex:page>

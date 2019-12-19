@@ -1,0 +1,235 @@
+<apex:page standardStylesheets="false" applyHtmlTag="false" id="pg"  sidebar="false" showHeader="false" docType="html-5.0" action="{!initMethod}">
+<html>
+    <head>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-5CMGZN2');</script>
+        <!-- End Google Tag Manager --> 
+        
+        <title>Resume</title>
+        
+        <link rel="stylesheet" href="{!$Resource.videoJs}" />
+        <link rel="stylesheet" href="{!$Resource.profilestyledefault}" />
+        <link rel="stylesheet" href="{!$Resource.jqueryui}" />
+        <link rel="stylesheet" href="{!$Resource.cssgaccca}" />
+        <link rel="stylesheet" href="{!$Resource.fontawesome}" />
+        <link rel="stylesheet" href="{!$Resource.custom}" />
+        <link rel="stylesheet" href="{!$Resource.main}" />
+        <link rel="stylesheet" href="{!$Resource.normalize}" />
+        
+        
+        <style>
+            .frmPopoup{
+            font: normal 15px / 27px Open Sans, Helvetica, Arial, Verdana, sans-serif;
+            word-spacing: normal;
+            }
+            
+            .lbl{
+            font-weight: bold;
+            }
+            .instrction{
+            text-align: left;
+    padding: 5px 5px;
+    color: white;
+    font-size: 12px;
+            }
+            .lbl1{
+            display: inline-block;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.42857;
+            margin-top: 10px;
+            }
+            .form-fd-control {
+            width:100% !important;
+            height:24px !important;
+            }
+            .form-fd-controlTextArea{
+            width:100% !important;
+            height:70px !important;
+            }
+            #datepicker2{
+            width: 205px;height: 23px;
+            }
+            .btnclasspopup{
+            font: normal bold 14px / 16px "Open Sans", Helvetica, Arial, Verdana, sans-serif;
+            text-transform: none;
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            padding: 11px 18px 10px 16px;
+            color: #ffffff;
+            background-color: #6ca9f2;
+            position: relative;
+            display: inline-block;
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            }
+            .mainContainer{
+            width:100%;
+            }
+            .boxContainer{
+            text-align: center;
+            border: 1px solid white;
+            padding: 45px;
+            border-radius: 5px;
+            margin-top: 6%;
+            margin-left:30%;
+            margin-right:30%;
+            }
+            @media screen and (max-width: 930px) {
+            .boxContainer{ 
+            margin-left:20%;
+            margin-right:20%;
+            }
+            }
+            @media screen and (max-width: 930px) {
+            .boxContainer{ 
+            margin-left:20%;
+            margin-right:20%;
+            }
+            }
+            @media screen and (max-width: 930px) {
+            .boxContainer{ 
+            margin-left:10%;
+            margin-right:10%;
+            }
+            }
+            .inputPass{
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            }
+            .inputBtn{
+            width: 30%;
+            background-color: #4c8baf;
+            color: white;
+            padding: 14px 20px;
+            margin: 25px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            }
+            
+            html { overflow-y: scroll !important; }
+            div.part tr.selected div[contenteditable=true].text, div.selected div[contenteditable=true].text.field {
+            
+            color: inherit !important;
+            }
+            div.part tr.selected div[contenteditable=true].text, div.selected div[contenteditable=true].text.field {
+            background-color: inherit !important;
+            
+            }
+            
+            article header {
+            
+            border-bottom: 0  !important;
+            display: block  !important;
+            width: 100%  !important;
+            }
+            article footer {
+            
+            display: block !important;
+            width: 99.8% !important;
+            height: 7px !important;
+            margin-top: 0px !important;
+            }     
+            .messageText h4{
+            display:none;
+            }
+            div.bottomContainer .value .text .row1 {
+            float: left;
+            width: 65% !important;
+            }
+            div.bottomContainer .value .text .row2 {
+            float: right;
+            width: 30% !important;
+            }
+            div.bottomContainer table .value p:first-of-type {
+            clear: none !important;
+            font-weight: inherit !important;
+            float: left !important;
+            width: 100% !important;
+            }
+            #content ol{
+            list-style:decimal inside !important;
+            }
+            
+            #content ul{
+            list-style:square inside !important;
+            }
+            img.gacccaBuilding {
+            margin: 0 0 0 -2em;
+            }
+            .imgDiv{
+            position: absolute!important;
+            bottom: 0 !important;
+            }
+            div.bottomContainer table .value p:nth-child(2) {
+            clear: none;
+            float: right;
+            width: 100% !important;
+            }
+            div.part {
+            margin-bottom: 0px !important;
+            }
+            div.column table .row2 {
+            
+            display:none !important;
+            }
+            div.bottomContainer {
+            margin-top: 20px !important;
+            }
+            .eline p br{
+            display:none !important;
+            }
+            .eline p br[data-cke-filler="true"]{
+            display:block !important;
+            }
+            .buttonFeedBack {
+            background-color: #CDEAFF; /* Green */
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            cursor: pointer;
+            }
+            
+            .buttonFeedBack2 {
+            background-color: white; 
+            color: black; 
+            border: 2px solid #CDEAFF;
+            }
+            
+            .buttonFeedBack2:hover {
+            background-color: #CDEAFF;
+            color: black;
+            }
+            .feedbackClass{
+            font-size: 17px;
+            text-align: center;
+            padding-top: 10%;
+            padding-bottom: 10%;
+            }
+        </style> 
+        
+      
+       
+    </head>
+   
+    
+    </html>
+
+</apex:page>

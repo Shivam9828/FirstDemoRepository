@@ -1,0 +1,100 @@
+div.leftColumn {
+    background-color:#eeeeee;
+    float:left;
+    width:20em;
+    min-height:88.12857em;
+
+    text-align:left;
+    padding:2em 0 0 2em;
+}
+img.gacccaLogo {
+    margin-right:1em;
+}
+img.gacccaBuilding {
+    margin:0 0 0 -2em;
+}
+p.gacccaHead {
+    font-size:1em;
+    font-weight:bold;
+    text-align:left;
+}
+div.leftColumn h3 {
+    margin-top:15px;
+    font-size:1em;
+}
+
+div.mainContent {
+    margin-left: 22em;
+    margin-right:1em;
+    padding-top:3em;
+    padding-left:1em;
+    text-align:left;
+}
+div.headline {
+    font-size:3em;
+    margin-bottom:0.5em;
+}
+
+div.general_job td.field,
+div.general_job td.field,
+div.personal_note td.field {
+    color:#0070C0;
+    display:block;
+    font-weight:bold;
+}
+
+div.rightBox {
+    float:right;
+    border-radius:10px;
+    background-color:#0070c0;
+    width:16em;
+    /* min-height:14em; */
+    text-align:center;
+    padding:2em;
+    position: relative;
+    z-index: 10;
+}
+/* */
+div.image.picture[data-url=""] {
+    min-height:14em;
+}
+div.image.picture {
+    width:16em;
+
+    background-image:url(img/gaccca/placeholder.png);
+    background-position:center;
+}
+td.value {
+    display:block;
+}
+div.bottomContainer {
+    background-color:#cdeaff;
+    border-radius:10px;
+}
+div.bottomContainer h3 {
+    color:#0070C0;
+    display:block;
+    font-weight:bold;
+    font-size:1.1em;
+}
+
+div.bottomContainer table .field {
+    width:130px;
+    vertical-align:top;
+}
+
+div.bottomContainer table .value p {
+    float:none;
+    clear:left;
+}
+div.bottomContainer table .value p:first-of-type {
+    clear:none;
+    font-weight:bold;
+    float:left;
+    width:170px;
+}
+div.bottomContainer table .value p:nth-child(2) {
+    clear:none;
+    float:right;
+    width:170px;
+}

@@ -1,0 +1,15 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="myField" type="String[]" default="['FieldApiName']" />
+    <aura:attribute name="myFieldText" type="String" default="FieldApiName" />
+    <aura:attribute name="sObjectName" type="String" default="ObjectName" />
+    <aura:handler name='init' value="{!this}" action='{!c.init}' />
+    <div class='tabset slds-tabs_card uiTabset--base uiTabset--default uiTabset flexipageTabset'>
+        <lightning:recordForm 
+                              objectApiName="{!v.sObjectName}"
+                              recordId='{!v.recordId}'
+                              mode="view"
+                              fields="{!v.myField}"
+                              columns="2"
+                              />
+    </div>
+</aura:component>

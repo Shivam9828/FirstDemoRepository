@@ -1,0 +1,151 @@
+<aura:component Controller="BoardAnythingComponent" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <ltng:require styles="{!$Resource.select2Css}"/>
+    <ltng:require scripts="{!join(',', $Resource.JQuery, $Resource.JqueryUI1,$Resource.select2Js)}" afterScriptsLoaded="{!c.setScriptLoaded}"/> 
+    
+    <!--String Attributes-->
+    <aura:attribute name="selectEditObject" type="string"/>
+    <aura:attribute name="selectEditListView" type="string"/>
+    <aura:attribute name="selectEditGroup" type="string"/>
+    <aura:attribute name="selectEditSummary" type="string"/>
+    <aura:attribute name="selectEditInput" type="string"/>
+    <aura:attribute name="searchTemplateField" type="String"/>
+    <aura:attribute name="isSpinner" type="Boolean" Default="false"/>
+    <aura:attribute name="boardId" type="Id"/>
+    <aura:attribute name="cbcList" type="CCBoardAnything__Board_Configuration__c"/>
+    <aura:attribute name="selectOnLblChange" type="string"/>
+    
+    <!--Boolean Attributes-->
+    <aura:attribute name="isEditForLbl" type="Boolean" Default="false"/>
+    
+    <!--Integer Attributes-->
+    <aura:attribute name="checkedTemplateFieldLength" type="Integer"/>
+    
+    <!--List and object type Attributes-->
+    <aura:attribute name="objlist" type="List" />
+    <aura:attribute name="listViewRecords" type="String[]"/>
+    <aura:attribute name="checkedGroupFields" type="String[]"/>
+    <aura:attribute name="groupByRecords" type="String[]"/>
+    <aura:attribute name="summaryFieldRecords" type="String[]"/>
+    <aura:attribute name="handleBoard" type="List"/>
+    <aura:attribute name="selectEditTemplate" type="List"/>
+    <aura:attribute name="TemplateFieldValues" type="object"/> 
+    <aura:attribute name="TemplateFieldchecked" type="List"/>
+    <aura:attribute name="selectedTempList" type="List"/>
+    <aura:attribute name="listOfSearchRecords" type="List"/>
+    <!--Event-->
+    <aura:registerEvent name="editBoardRecord" type="c:HandleEditBoardRecord" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:spinner variant="brand" size="large" aura:id="Id_spinner" class="slds-show" />
+    
+    
+    
+    <aura:if isTrue="{!v.isSpinner}">
+        <div aura:id="spinner" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Please Wait</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+    <div id="filterDivForEdit" class="sidenav">  
+        <aura:if isTrue="{!v.isSpinner}">
+            <div aura:id="spinner" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Please Wait</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        
+          
+        
+        <div class="slds-form-element slds-m-left_small slds-m-right_small">
+            <lightning:select aura:id="selectObj" name="select" value="{!v.selectEditObject}" onchange="{!c.onObjectChange}" label="Select Object">
+                <aura:iteration items="{!v.objlist}" var="objname">
+                    <option text="{!objname}" selected="{!objname==v.selectEditObject}"></option>
+                </aura:iteration>
+            </lightning:select>
+        </div><br/>            
+        <div class="slds-form-element slds-m-left_small slds-m-right_small " style="margin-top: -10px;">
+            <lightning:select aura:id="lst" name="select" class="sideView" value="{!v.selectEditListView}" label="Select ListView" onchange="{!c.onListViewChange}">
+                <aura:iteration items="{!v.listViewRecords}" var="objname">
+                    <option text="{!objname}" selected="{!objname==v.selectEditListView}"></option>
+                </aura:iteration>
+            </lightning:select>
+            {!v.selectEditListView}
+            
+        </div><br/> 
+        <div class="slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top: -10px;">       
+            <lightning:select aura:id="grp" name="groupby" value="{!v.selectEditGroup}" label="Group By" class="grpBy" onchange="{!c.onGroupChange}">
+                <aura:iteration items="{!v.groupByRecords}" var="groupRecords">
+                    <option text="{!groupRecords}" selected="{!groupRecords==v.selectEditGroup}"></option>
+                </aura:iteration>
+            </lightning:select>
+            {!v.selectEditGroup}
+            
+        </div><br/>            
+        <div class="slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top: -10px;">
+            <lightning:select name="select" value="{!v.selectEditSummary}" label="Summary Fields">
+                <option>--None--</option>
+                <aura:iteration items="{!v.summaryFieldRecords}" var="summaryfields">
+                    <option text="{!summaryfields}" selected="{!summaryfields==v.selectEditSummary}"></option>
+                </aura:iteration>
+            </lightning:select>
+            <div class="slds-text-color_destructive slds-hide" aura:id="SummaryField-error-01">This field is required</div>
+            
+        </div><br/>
+        
+        <!-- Template Field-->
+        <div class="slds-form-element slds-m-left_small slds-m-right_small">  
+            <!--Input Field-->
+            <label class="slds-form-element__label" for="templatesearch">
+                <abbr class="slds-required" title="required">* </abbr>Template Fields</label>
+            <div aura:id="lookupField" onkeyup="{!c.handleKeyUpForTemplateField}" class="slds-show">  
+                <lightning:input id="templatesearch"  class="slds-m-top_none sideView" style="margin-top: -10px;" aura:id="enter-search" name="enter-search" value="{!v.searchTemplateField}" type="search"/>
+                <div class="slds-text-color_destructive slds-hide" aura:id="Template-error-01">This field is required</div>
+            </div>
+            <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                <lightning:pill class="pillSize" label="{!v.checkedTemplateFieldLength +' Selected'}"  onremove="{! c.clear }"></lightning:pill>
+            </div>
+            <div aura:id="dropTemplateFieldId" class="slds-dropdown slds_col slds-scrollable" style="height:9rem;width:100%;postion:absolute;top:52px" onmouseenter="" onmouseleave="{!c.handleMouseLeaveTemplateFields}">  
+                <ul role="menu" style="margin-left:7px;">
+                    <aura:iteration items="{!v.TemplateFieldValues}" var="template">
+                        <li >
+                            <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                <label class="slds-checkbox" >
+                                    <ui:inputCheckbox  value="{!template.checked}" change="{!c.templateCheckboxHandler}"/>
+                                    <span class="slds-checkbox--faux" />
+                                </label>
+                                <span class="slds-media__body">  
+                                    <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!template.templateFields}</span>
+                                </span>
+                            </span>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </div><br/>
+        <!-- Template End Field -->
+        
+        <!-- Label Field -->
+        <div aura:id="labelfield" class="slds-m-top_x-large slds-form-element slds-m-left_small slds-m-right_small sideView" style="margin-top:1px;">
+            <lightning:input aura:id="LabelInputField" class="inputLabel sideView" name="Label" value="{!v.selectEditInput}" placeholder="Enter Label" label="Enter Label" />
+        </div><br/>
+        
+        
+        <lightning:button class="slds-m-top_x-small slds-m-left_small slds-m-right_medium slds-float_right" variant="brand" label="Update" title="Update" onclick="{!c.updateBoard}"/>
+        
+        
+        <lightning:button class="slds-m-top_x-small slds-m-left_small slds-m-right_medium slds-float_right" variant="Neutral" label="Cancel" title="Cancel" onclick="{!c.CloseModel}"/>
+    
+        
+       
+    </div>
+    
+    
+    
+</aura:component>

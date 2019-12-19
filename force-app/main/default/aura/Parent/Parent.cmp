@@ -1,0 +1,14 @@
+<!--Parent.cmp-->
+<aura:component controller="MapAuraController">
+    <!--declare attributes-->
+    <aura:attribute name="keyList" type="List"/>
+    <aura:attribute name="companyMap" type="map"/>
+    <aura:attribute name="keyFor" type="string"/>
+     
+    <ui:button label="Iterate Map" press="{!c.getMapCompany}"/>
+     
+    <!--Iterate the mapCompany-->
+    <aura:iteration items="{!v.keyList}" var="key" >
+        <c:Child map="{!v.companyMap}" key="{!key}"/>
+    </aura:iteration>
+</aura:component>

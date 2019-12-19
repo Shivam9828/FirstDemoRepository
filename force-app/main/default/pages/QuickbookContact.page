@@ -1,0 +1,16 @@
+<apex:page controller="QuickBookIntigrationService" action="{!quickbookContactExport}" >
+    
+    <div id="errorMsg" >
+        <apex:pageMessages />
+    </div> 
+    <script>
+    var msg = document.getElementById('errorMsg').innerText;alert(msg);
+    if(msg != null && msg != ''){
+        window.setTimeout(function(){
+            window.location.href = "/"+'{!ContactErr.id}';
+            
+        }, 3000);
+    }
+    </script>
+    
+</apex:page>

@@ -1,0 +1,38 @@
+<aura:component controller="LightningAccountController">
+   
+    <aura:attribute name="industryMap" type="Map"/>
+    <aura:attribute name="acc" type="Account" default="{'sobjectType':'Account', 
+                                                       'Name': '',
+                                                       'AccountNumber': '',
+                                                       'Email': '',
+                                                       'Phone': '', 
+                                                       'Industry': ''}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+ <div class="slds-m-around--xx-large">
+        <div class="container-fluid">
+            <div class="form-group">
+                <lightning:input name="accName" type="text" aura:id="fieldId" required="true" maxlength="50" label="Account Name" value="{!v.acc.Name}" />
+            </div>
+            <div class="form-group">
+                <lightning:input name="accNumber" type="text" aura:id="fieldId" required="true" maxlength="10" label="Account Number" value="{!v.acc.AccountNumber}" />
+            </div>
+            <div class="form-group">
+                <lightning:input name="accEmail" type="email" aura:id="fieldId" required="true" maxlength="100" label="Email" value="{!v.acc.Email}" />
+            </div>
+            <div class="form-group">
+                <lightning:input name="accPhone" type="phone" aura:id="fieldId" required="true" maxlength="10" label="Phone" value="{!v.acc.Phone}" />
+            </div>
+   <div class="form-group">
+                <lightning:select aura:id="industryPicklist" value="{!v.acc.Industry}" onchange="{!c.handleCompanyOnChange}" name="industryPicklist" label="Industry" required="true">
+                    <option value="">--None--</option>
+                    <aura:iteration items="{!v.industryMap}" var="ind" indexVar="key">
+                        <option text="{!ind.value}" value="{!ind.key}" selected="{!ind.key==v.acc.Industry}" />
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </div>
+
+        <br/>
+        <lightning:button variant="brand" label="Submit" onclick="{!c.handleAccountSave}" />              
+    </div>
+</aura:component>

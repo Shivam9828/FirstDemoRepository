@@ -1,0 +1,15 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    
+    <!--Include EmpApiDemo child component and pass channel name to subscribe
+     	ex: "/topic/AccountSpy" is my pushtopic channel name
+  		once the event is fired, it will handled in handleMessage controller method -->
+    <c:EmpApiDemo channelName="/topic/AccountSpy" onEmpEvent="{!c.handleMessage}" />
+    
+    <!-- lightning card to display detail -->
+    <lightning:card footer="This component displays account changes using lightning:empApi component" 
+                    title="Account Spy"
+                    iconName="standard:search">
+        <div id="output">
+        </div>
+    </lightning:card>
+</aura:component>

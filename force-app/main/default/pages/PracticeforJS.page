@@ -1,0 +1,40 @@
+<apex:page standardController="contact" id="pg">
+      <apex:form id="frm">
+            <apex:pageBlock title="Javascript Example" id="pgBlock" >
+                 <apex:pageBlockSection title="Checkbox Example" id="pbSec"> 
+                      <apex:inputCheckbox id="cc" value="{!contact.check__c}" label="Do not call" onchange="tt(this);"/>
+                      <apex:pageBlockSectionItem id="pbsi">
+                          <apex:outputLabel value="Languages" id="lblLang" ></apex:outputLabel>
+                          <apex:inputField id="languageCtrl" value="{!contact.Languages__c}" />
+                      </apex:pageBlockSectionItem>
+                 </apex:pageBlockSection>
+            </apex:pageBlock>
+      
+      </apex:form>
+      
+      <script>
+         function tt(chkboxCtrl) {
+         
+             try {
+                      // hide if checked
+                      if( chkboxCtrl.checked ) {
+                          document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.languageCtrl}').style.display = 'inline';
+                          document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.lblLang}').style.display = 'inline';
+                      }
+                      else {
+                          document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.languageCtrl}').style.display = 'none';
+                          document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.lblLang}').style.display = 'none';
+                      }
+                      
+                      
+              }
+              catch(e) {
+                  alert(e);
+              }
+         }
+         
+         document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.languageCtrl}').style.display = 'none';
+         document.getElementById('{!$Component.frm.pgBlock.pbSec.pbsi.lblLang}').style.display = 'none';
+         
+   </script>   
+</apex:page>

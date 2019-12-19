@@ -1,0 +1,13 @@
+<aura:component>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="intervalId" type="Integer" default="0"/>
+    
+    <div id="parentDIV" style="overflow:hidden">
+        <p style="position:relative;" id="tofloat">
+            <b><span style="color:red">Important Note : </span>
+            This is for Demo purpose...</b>
+        </p>
+    </div>
+    
+</aura:component>

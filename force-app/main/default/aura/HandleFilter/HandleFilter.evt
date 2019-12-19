@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="Event template">
+    <aura:attribute name="groupValuesAfterSave" type="object"/> 
+    <aura:attribute name="allGroup" type="Boolean"/> 
+    <aura:attribute name="isGroupTrue" type="Boolean"/> 
+    <aura:attribute name="listOfCheckedGroup" type="String[]"/> 
+</aura:event>

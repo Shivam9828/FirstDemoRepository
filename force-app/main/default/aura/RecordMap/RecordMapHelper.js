@@ -1,0 +1,6 @@
+({
+    reloadRecord : function(component) {
+       
+	}
+
+})

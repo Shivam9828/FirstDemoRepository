@@ -1,0 +1,11 @@
+.THIS #templatesearch{
+    position: absolute;
+    top: -11px;
+    left: 0;
+    right: 0;
+    border: 0; 
+}
+
+.THIS .pillSize{
+    width:100%;
+}

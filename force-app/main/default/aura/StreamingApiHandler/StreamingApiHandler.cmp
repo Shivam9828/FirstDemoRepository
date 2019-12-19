@@ -1,0 +1,15 @@
+<aura:component access="global" controller="StreamingApiController">
+    <!-- ChannelName, which needs to subscribed -->
+    <aura:attribute name="channelName" type="String" required="true"/>
+    <!-- Save the reference of cometD, which will be used to disconnect the subscription -->
+    <aura:attribute name="cometd" type="Object"/>
+    <!-- Save the reference of current subscription, which can be unsubscribe later on -->
+    <aura:attribute name="subscription" type="Object"/>
+     <!-- This event is fired when a component is destroyed. 
+		Handle this event if you need to do custom cleanup when a component is destroyed.-->
+    <aura:handler name="destroy" value="{!this}" action="{!c.unsubscribe}"/>
+    <!-- Component event, which will be fired once the message is received -->
+    <aura:registerEvent name="onStreamEvent" type="c:StreamEvent"/>
+    <!-- Must include cometD library -->
+    <ltng:require scripts="{!$Resource.cometd + '/cometd.js'}" afterScriptsLoaded="{!c.doInit}" />    
+</aura:component>

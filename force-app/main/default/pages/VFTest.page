@@ -1,0 +1,15 @@
+<apex:page controller="VFforTest">
+	   <apex:pageBlock >
+    <apex:variable var="i" value="{!0}"/>
+        <apex:pageBlockTable value="{!acnt}" var="acc">
+            <apex:column >
+                {!i}
+                <apex:variable var="i" value="{!i+1}"/>
+            </apex:column>
+            <apex:column value="{!acc.Name}"/>
+                                            
+            <apex:column value="{!acc.industry}"/>
+             
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

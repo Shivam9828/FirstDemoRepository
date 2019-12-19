@@ -1,0 +1,48 @@
+<apex:page standardController="Account" extensions="NewsWidgetController" sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" >
+    <html>
+        <head>
+            <title>
+                Google News           
+            </title>
+        </head>
+        <body>
+            <div width="100%" style="text-align:center" >
+                <!--<img src="{!$Resource.News_Loading}" id="loader"></img>-->
+            </div>
+            <div id="news">
+            </div>
+            <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+            <!--<script type="text/javascript" src="{!$Resource.GoogleNewsJS}"></script>-->
+            <script type="text/javascript">
+            $( document ).ready (
+                function() {
+                    getNews( encodeURIComponent( "{!Account.Name}" ) );
+                }
+            );
+            var searchTerm;
+            var newsFetchCompleted = function( res ) {
+                var parser = new DOMParser();
+                var xmlDoc = parser.parseFromString( res, "text/xml" );
+                
+                var descriptions = xmlDoc.getElementsByTagName( "description" );
+                
+                for( var i = 0 ; i <= descriptions.length - 1 ; i++ ) {
+                    if( descriptions[i].textContent !== "Google News" ) {
+                        $( "#news" ).append( descriptions[i].textContent );
+                        $( "a" ).attr( "target" , "_blank" );
+                    }
+                }
+                $( "#loader" ).hide();
+            };
+            function getNews( searchTerm ) {
+                NewsWidgetController.newsDisplayer( searchTerm,
+                                                   newsFetchCompleted, 
+                                                   {
+                                                       escape: false
+                                                   }
+                                                  );
+            }
+            </script>
+        </body>
+    </html>
+</apex:page>

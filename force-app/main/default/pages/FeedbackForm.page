@@ -1,0 +1,30 @@
+<apex:page >
+    <apex:slds />
+    <apex:form style="margin: 90px;">
+        
+        <div class="slds-panel slds-size_medium slds-panel_docked slds-panel_docked-left slds-is-open" aria-hidden="false">
+            <div class="slds-panel__header">
+                <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Quick Appointment</h2>
+                
+            </div>
+            <div class="slds-panel__body">
+                
+                <div class="slds-grid slds-grid_vertical">
+                    <div class="slds-col slds-align_absolute-center slds-border_bottom">
+                        <span style="font-size: 25px;">Quick Appointment</span>
+                    </div>
+                    <div class="slds-col slds-align_absolute-center slds-border_bottom">
+                        <span>We would like your feedback to improve our website<br/>
+                            what is your opinion of this page?</span>
+                    </div>
+                    <div class="slds-col slds-align_absolute-center slds-border_bottom">
+                        <span>3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </apex:form>
+</apex:page>

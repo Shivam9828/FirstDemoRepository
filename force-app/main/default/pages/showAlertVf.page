@@ -1,0 +1,17 @@
+<apex:page controller="showAlertRandom" showHeader="true">
+    <script>
+    var previousOnload =  window.onload;
+     window.onload = function(){ if(previousOnload)previousOnload();
+    </script>
+    <apex:form id="form">
+        <apex:outputText rendered="{!showAlert}" id="alert">
+            <script>
+            alert('Hello World');
+            </script>
+        </apex:outputText>
+        <apex:outputText rendered="{!not showAlert}" id="noAlert">
+            No alert this time, sorry. Random value was: {!numberValue}.
+        </apex:outputText>
+        <apex:actionPoller interval="5" action="{!doRandomAlert}" reRender="form" />
+    </apex:form>
+</apex:page>

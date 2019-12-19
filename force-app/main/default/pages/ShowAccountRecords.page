@@ -1,0 +1,18 @@
+<apex:page controller="DisplayAccounts" tabStyle="Account" >
+   <apex:form >
+       <apex:pageBlock title="Add Accounts">
+           <apex:pageBlockTable value="{!accWrpList}" var="ac">
+               <apex:column headervalue="select">
+                   <apex:inputCheckBox value="{!ac.isChecked }"/>
+               </apex:column>
+               
+               <apex:column headervalue="Account Name" value="{!ac.Name}"/>
+               <apex:column headervalue="Account Phone" value="{!ac.Phone}"/>
+               <apex:column headervalue="Account Website" value="{!ac.Website}"/>
+           </apex:pageBlockTable>
+           <!--<apex:pageBlockButtons >
+               <apex:commandButton value="GetAccessToken" action="{!ReturnAccessToken}"/>
+           </apex:pageBlockButtons>-->
+       </apex:pageBlock>
+   </apex:form>
+</apex:page>

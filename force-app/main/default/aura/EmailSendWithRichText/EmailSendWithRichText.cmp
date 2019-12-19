@@ -1,0 +1,73 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" access="global" controller='EmailSendController'>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="contact" type="Contact"       
+                    default="{ 'sobjectType': 'Contact',
+                             'Id': null,
+                             'FirstName': '',
+                             'LastName': '',
+                             'Account': ''
+                             }"/>
+    <aura:attribute name="conAccount" type="Contact"       
+                    default="{ 'sobjectType': 'Contact',
+                             'Account': ''
+                             }"/>
+    
+    <aura:attribute name="newApplicant" type="string" default=""/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="shoHTML" type="boolean" default="false"/>
+    <aura:attribute name="isNew" type="boolean" default="false"/>
+    <aura:attribute name="changeApplicant" type="boolean" default="false"/>
+    <aura:attribute name="HTMLButton" type="string" default="SHOW HTML"/>
+    <aura:attribute name="helpText" type="string" default=""/>
+    <aura:attribute name="htmlText" type="string" default=""/>
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container" style='position:fixed'>
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>  
+    <lightning:card>
+        <aura:set attribute="title">
+            
+        </aura:set>
+        <aura:set attribute="footer">
+        <aura:if isTrue='{!!v.isNew}'>
+                <button class="slds-button slds-button--neutral" onclick='{!c.cancel}'>Back to List view</button>
+            <button class="slds-button slds-button--brand" onclick="{!c.saveTemplate}">Save</button>
+            <aura:set attribute='else'>
+                <button class="slds-button slds-button--neutral" onclick='{!c.cancel}'>Cancel</button>
+            <button class="slds-button slds-button--brand" onclick="{!c.createTemplate}">Save</button>
+            </aura:set>
+       </aura:if>
+        </aura:set>
+        <div class="slds-grid slds-wrap temp">
+            
+            <c:customLookup isNew="{!v.isNew}" aura:id="childLook" objectAPIName="Account" IconName="custom:custom24" selectedRecord="{!v.selectedLookUpRecord}" label="Applicant"/>
+            
+            <label class="slds-form-element__label" for="CC"><abbr class="slds-required" title="required">* </abbr>Email Template Name</label>
+            <ui:inputText class="slds-input" aura:id="name"  value="{!v.contact.FirstName}" required="true" placeholder=""/>
+            <br/> <br/>          
+            <label class="slds-form-element__label" for="CC"><abbr class="slds-required" title="required">* </abbr>Subject</label>
+            <ui:inputText class="slds-input" aura:id="subject"  value="{!v.contact.LastName}" placeholder="Subject"/>
+            <div class="htmlClass"> 
+                <button class="slds-button slds-button--neutral" onclick="{!c.showHTML}" >{!v.HTMLButton}</button>  <br/> 
+            </div>
+            <!--<div style='width:100%;' aura:id='richTextId' class='slds_open'>
+                <label class="slds-form-element__label" for="textareaSample2"><abbr class="slds-required" title="required">* </abbr>Email
+                    <lightning:helptext    content="{!v.helpText}" />
+                </label>
+                <force:inputField value="{!v.emailTemplate.Email_Template__c}" />
+           </div>
+        <div style='width:100%;' aura:id='htmlTextId' class='slds_hide'>
+                <lightning:textarea name="input4"  value="{!v.htmlText}" label="HTML Source" />     
+            </div>-->
+            
+        </div>
+        
+    </lightning:card>
+</aura:component>

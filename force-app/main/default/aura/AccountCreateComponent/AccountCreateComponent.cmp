@@ -1,0 +1,81 @@
+<aura:component controller="AccountListController">
+<aura:attribute name="newAccount" type="Account"
+default="{ 'sobjectType': 'Account',
+'Name': '',
+'Industry': '',
+'Phone': ''
+}"/>
+<div aria-hidden="false" id="newAccountSectionId" role="dialog" class="slds-modal slds-modal--large slds-fade-in-open" style="display:none;">
+<div class="slds-modal__container">
+<div class="slds-modal__header">
+<h2 class="slds-text-heading--medium">New Account</h2>
+<button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.showModalBox}">
+
+<span class="slds-assistive-text">Close</span>
+</button>
+</div>
+<div class="slds-modal__content">
+ <div class="c-container">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-small" size="12">
+               
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:layout>
+                    <lightning:layoutItem padding="around-small" size="3">
+                        <div class="page-section page-right">
+                           <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-5 menuSection" aria-hidden="false">
+                    <nav class="slds-nav-vertical" aria-label="Sub page">
+                        <div class="slds-nav-vertical__section">
+                            <ul>
+                                <li><a data-tab="accountMapping" class="slds-nav-vertical__action" aria-describedby="entity-header" aria-current="page">Account Mapping</a></li>
+                                <li><a data-tab="contactMapping" class="slds-nav-vertical__action" aria-describedby="entity-header" aria-current="page">Contact Mapping</a></li>
+                            	<li><a data-tab="leadMapping" class="slds-nav-vertical__action" aria-describedby="entity-header" aria-current="page">Lead Mapping</a></li>
+                               	<li><a data-tab="userData" class="slds-nav-vertical__action" aria-describedby="entity-header">Connected User</a></li>
+                                <li><a data-tab="genSetting" class="slds-nav-vertical__action" aria-describedby="entity-header">General</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                               </div></div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="6">
+                        <div class="page-section page-main">
+                           <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <thead>
+                                <tr><th>Contact Mapping</th>
+                                <th></th>
+                                    <th></th>
+                                </tr>
+                                <tr class="slds-text-title_caps">
+                                <th scope="col">FirstName</th>
+                                    <th scope="col">LastName</th>
+                                    <th scope="col">Email</th>
+                                </tr>
+                                
+                               </thead>
+                            </table>
+                        </div>
+                    </lightning:layoutItem>
+                    
+                </lightning:layout>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto" padding="around-small" size="12">
+                <div class="page-footer page-section">
+                    <h2>Footer</h2>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</div>
+<div class="slds-modal__footer">
+<div class="slds-x-small-buttons--horizontal">
+<button class="slds-button slds-button--neutral" onclick="{!c.showModalBox}" >Cancel</button>
+<button class="slds-button slds-button--neutral slds-button--brand" onclick="{!c.saveAccount}">Save</button>
+</div>
+</div>
+</div>
+</div>
+<div class="slds-backdrop slds-backdrop--open" id="backGroundSectionId" style="display:none;"></div>
+</aura:component>

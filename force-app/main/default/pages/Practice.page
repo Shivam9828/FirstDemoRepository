@@ -1,0 +1,16 @@
+<apex:page controller="RerenderController" lightningStylesheets="true">
+    <apex:form >
+ 
+<apex:outputPanel id="datePanelContainer">
+    <apex:outputPanel id="datePanel"
+        rendered="{!showdate}"> 
+     sgdshkfdskffsdk
+    </apex:outputPanel>
+  </apex:outputPanel>
+  <div>
+     Show Date? <apex:inputCheckbox value="{!showDate}"/>
+  </div>
+  <apex:commandButton value="Submit"
+    rerender="datePanelContainer"/>
+        </apex:form>
+</apex:page>

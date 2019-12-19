@@ -1,0 +1,16 @@
+.THIS .slds-modal__container{
+  font-weight: 1000;
+}
+
+.THIS.exampleHolder{
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+.THIS .slds-spinner_container{
+    background: none;
+    margin-left: 345%;
+    margin-bottom: 53%;
+}

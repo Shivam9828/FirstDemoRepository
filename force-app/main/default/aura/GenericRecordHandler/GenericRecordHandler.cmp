@@ -1,0 +1,101 @@
+<!-- - **Generic Record Handler Component**
+	 - Use this component to edit any record of any object on the same page
+	 - The component gives you option to only view custom or standard objects or all objects
+	 - You can view your record in read only mode or view mode 
+	 - @author - Manish Choudhari
+	 - -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" 
+                access="global"
+                controller="GenericRecordHandler">
+    <!-- Init handler, this function will be executed on page load -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!-- This attribute will hold all object list -->
+    <aura:attribute name="allObjects" type="List" />
+    <!-- This attribute will hold all filtered object list -->
+    <aura:attribute name="filteredObjects" type="List" />
+    <!-- This attribute will hold record list -->
+    <aura:attribute name="records" type="Object"/>
+    <!-- This attribute will hold column information for data table -->
+    <aura:attribute name="columns" type="List"/>
+    <!-- This attribute help in deciding to show detail component -->
+    <aura:attribute name="showDetails" type="boolean" default="false" />
+    <!-- This attribute will hold current selected object name -->
+    <aura:attribute name="selectedObject" type="String"/>
+    <!-- This attribute will hold current selected record id-->
+    <aura:attribute name="selectedRecord" type="String"/>
+    <!-- This attribute will hold mode of record form, default is view-->
+    <aura:attribute name="recordFormMode" type="String" default="readonly"/>
+    
+    <aura:attribute name="myCar" type="String[]" default="[Id,Name,Build_Year__c,Per_Day_Rent__c,Mileage__c,Available_For_Rent__c,Id]" />
+    
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="12" mediumDeviceSize="12" padding="around-small">
+            <lightning:card title="Set your view">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="6" mediumDeviceSize="3" padding="around-small">
+                        <lightning:select aura:id="objectList" name="objects" label="Select Object" 
+                                          onchange="{!c.onObjectSelectionChange}">
+                            <option value="">Select an object..</option>
+                            <aura:iteration items="{!v.filteredObjects}" var="item">
+                                <option value="{!item.objectName}">{!item.objectLabel}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" mediumDeviceSize="3" padding="around-small">
+                        <lightning:select aura:id="typeList" name="types" label="Select Object Types" 
+                                          onchange="{!c.onTypeChange}">
+                            <option value="">Filter object types..</option>
+                            <aura:iteration items="Standard Objects,Custom Objects,All Objects" var="item">
+                                <option value="{!item}">{!item}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" mediumDeviceSize="3" padding="around-small">
+                        <lightning:select aura:id="modeList" name="modes" label="Select Mode" 
+                                          onchange="{!c.onModeChange}">
+                            <aura:iteration items="ReadOnly Mode,View/Edit Mode" var="item">
+                                <option value="{!item}">{!item}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+    
+    
+    <lightning:layout multipleRows="true">
+        <!-- Data table section to display records -->
+        <lightning:layoutItem size="3" mediumDeviceSize="3" padding="around-small">
+            <lightning:card title="Records">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <lightning:datatable
+                                             columns="{! v.columns }"
+                                             data="{! v.records }"
+                                             keyField="id"
+                                             hideCheckboxColumn="true"
+                                             onrowaction="{! c.handleRowAction }" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem size="9" mediumDeviceSize="9" padding="around-small">
+            <lightning:card title="View Or Edit Record">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" padding="around-medium">
+                        <aura:if isTrue="{!v.showDetails}">
+                            <lightning:recordForm
+                                                  recordId="{!v.selectedRecord}" 
+                                                  objectApiName="{!v.selectedObject}"
+                                                  layoutType="Full"
+                                                  columns="2"
+                                                  mode="{!v.recordFormMode}" />
+                        </aura:if>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

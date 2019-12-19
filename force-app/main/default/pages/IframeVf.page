@@ -1,0 +1,13 @@
+<apex:page showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+    <html>
+<body>
+ 
+<h2>Iframe - Target for a Link</h2>
+
+
+<p>When the target of a link matches the name of an iframe, the link will open in the iframe.</p>
+
+</body>
+</html>
+
+</apex:page>

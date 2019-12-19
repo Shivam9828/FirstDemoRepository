@@ -1,0 +1,6 @@
+<aura:component controller="SendEmailForTest" implements="force:lightningQuickAction">
+  
+    <lightning:button variant="brand" label="Brand action" title="Send Email" onclick="{!c.sendMail }" />
+
+
+</aura:component>

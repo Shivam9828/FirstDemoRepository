@@ -1,0 +1,10 @@
+<aura:event type="COMPONENT" description="Event for storing recordId">
+    <aura:attribute name="recordId" type="String" default="" />
+    <aura:attribute name="isEdit" type="Boolean" default="true" />
+    <aura:attribute name="checkedTemplate" type="List" default="" />
+    <aura:attribute name="objName" type="String" default="" />
+    <aura:attribute name="listView" type="String" default="" />
+    <aura:attribute name="groupName" type="String" default="" />
+    <aura:attribute name="summaryValue" type="String" default="" />
+    <aura:attribute name="input" type="String" default="" />
+</aura:event>

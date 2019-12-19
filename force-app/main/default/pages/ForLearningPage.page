@@ -1,0 +1,19 @@
+<apex:page standardController="Account">
+   <div class="wpb_text_column wpb_content_element " >
+                           <div class="wpb_wrapper">
+                               <apex:form id="partForm" >
+                               <div class="dhvc-form-inner">
+                                    <div class="vc_row wpb_row vc_row-fluid dt-default" style="margin-top: 0px;margin-bottom: 0px">
+                                           <div class="wpb_column vc_column_container vc_col-sm-12">
+                                               <div class="vc_column-inner "><div class="wpb_wrapper">
+                                                   <div class="dhvc-form-group dhvc-form-field[Applicants][app_014]-box dhvc_form_radio ">
+                                                  <label class="dhvc-form-label" for="dhvc_form_control_field[Applicants][cf_893]">Name <span class="required">*</span></label>
+                                                       <div class="dhvc-form-input ">
+                                                           <apex:inputField label="Citizenship" styleClass="test" value="{!Account.Name}" id="citizien"/>
+                                                       </div><span class="dhvc-form-help">Please also list your dual citizenship here.</span>
+                                                       <span class="dhvc-form-error" id='newId0'></span>
+                                                   </div>
+                                                   </div></div></div></div></div>
+                               </apex:form></div></div>
+                              
+</apex:page>

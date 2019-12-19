@@ -1,0 +1,58 @@
+<aura:component >
+    
+    <ltng:require styles="{!$Resource.CCBoardAnything__fSelectCss}"/>
+    <ltng:require scripts="{!$Resource.CCBoardAnything__fSelectjQuery}"></ltng:require>
+    <ltng:require scripts="{!$Resource.CCBoardAnything__rotateIconjQuery}"></ltng:require>
+    <aura:attribute name="lstSelectedRecords" type="List" default="[]" />
+    <aura:attribute name="lstOptions" type="List" default="[]" />
+    <aura:attribute name="listOfSearchRecords" type="List"/>
+    <aura:attribute name="listOfSearchRecords2" type="string[]"/>
+    <aura:attribute name="SearchKeyWord" type="string" default=""/>
+    <aura:attribute name="objectAPIName" type="string" default=""/>
+    <aura:attribute name="IconName" type="string" default=""/>
+    <aura:attribute name="label" type="string" default=""/>
+    <aura:attribute name="checkedTemplateFieldLength" type="Integer"/>
+    <!--<aura:attribute name="Message" type="String" default=""/>-->
+    
+    <aura:registerEvent name="mutiSelectEvnt" type="c:SelectTemplate"/> 
+    
+    <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close">
+        <label class="slds-form-element__label">Select Template Fields</label>
+        
+                    <div aura:id="lookupField" class="slds-show"> 
+                        
+                        <ui:inputText click="{!c.onfocus}"
+                                      updateOn="keyup"
+                                      keyup="{!c.keyPressController}"
+                                      class="slds-lookup__search-input slds-input inputSize"
+                                      value="{!v.SearchKeyWord}"
+                                      placeholder="search.."/>
+                        
+                        
+                    </div> 
+                    <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                        <lightning:pill class="pillSize" label="{!v.checkedTemplateFieldLength +' Selected'}"  onremove="{! c.clear }"></lightning:pill>
+                    </div>
+                    
+                
+         
+        
+        <ul style="height:9rem;width:100%;postion:absolute;top:52px;margin-top:12px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds slds-scrollable" role="listbox">
+            <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+            <center> {!v.Message}</center>
+            <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec" indexVar="ind">
+                
+                <li>
+                    <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                        <label class="slds-checkbox" >
+                            <ui:inputCheckbox value="{!singleRec.checked}" change="{!c.templateCheckboxHandler}"/>
+                            <span class="slds-checkbox--faux" />
+                        </label>
+                        <span class="slds-media__body">  
+                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.templateFields}</span>
+                        </span>
+                    </span>
+                </li>
+            </aura:iteration>
+        </ul></div>
+</aura:component>

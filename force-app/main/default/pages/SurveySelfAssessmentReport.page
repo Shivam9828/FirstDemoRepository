@@ -1,0 +1,459 @@
+<apex:page renderAs="PDF" controller="SurveySelfAssessmentReportContoller"  applyHtmlTag="false" applyBodyTag="false" showHeader="false" standardStylesheets="false">
+    <html>
+        <head>
+            <apex:stylesheet value="https://www.w3schools.com/w3css/4/w3.css"/>
+            <style>
+                @page {
+                size: 12in 16in;
+                }
+                body {
+                font-family: Arial Unicode MS;
+                margin:0;
+                padding:0;
+                }
+                
+                table {
+                border-collapse: collapse;
+                }
+                
+                td {
+                padding-top: .5em;
+                padding-bottom: .5em;
+                }
+                
+                .skipped {
+                font-size: 18px; 
+                font-weight: bold; 
+                padding-left: 25px;
+                }
+                
+                .labels {
+                font-size: 15px; 
+                font-family: sans-serif;
+                font-weight: bold; 
+                color: #3677ff;
+                padding-right :10px;
+                }
+                
+                .descriptionCol {
+                margin-left: 10px;
+                }
+                
+                div.footer{
+                display:block;
+                position: runing(footer);
+                padding: 5px;
+                }
+                
+                .bold
+                {font-family: sans-serif; font-weight:bold; font-size: 14px;}
+                .bold1
+                {font-family: sans-serif; font-weight:bold;}
+                .center
+                {text-align:center;}
+              
+
+                        <!--  
+
+        Heading -  3677ff
+
+        60% - 61A8EA
+
+        14% - 00AF50
+
+        html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}
+        .w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,.w3-row-padding:after,.w3-row-padding:before,
+        .w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
+        .w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
+        .w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
+        .w3-xlarge{font-size:24px!important}.w3-xxlarge{font-size:36px!important}.w3-xxxlarge{font-size:48px!important}.w3-jumbo{font-size:64px!important}
+        .w3-green,.w3-hover-green:hover{color:#fff!important;background-color:#4CAF50!important} -->
+                
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <apex:image url="{!$Resource.SURVEY_REPORT_HEADER_FR}" width="100%" height="80%" rendered="{!language != 'en'}"/>
+                <apex:image url="{!$Resource.SURVEY_REPORT_HEADER_EN}" width="100%" height="80%" rendered="{!language == 'en'}"/>
+            </div>
+            <div class="content">
+            	<div class="w3-container">
+                
+                <br/>
+                
+                <table>
+                    <tr>
+                        <td width="25%" align="right;font-weight:bold;">
+                            <apex:outputText value="OVERALL SCORE" style="font-size: 22px;  color: #3677ff; padding-right :10px;" styleClass="bold1" rendered="{!language == 'en'}"/><br/>
+                            <apex:outputText value="{!overallTitle}" style="font-size: 26px; padding-right :10px;" styleClass="bold1" rendered="{!language == 'en'}"/>
+
+                            <apex:outputText value="NOTE GLOBALE" style="font-size: 22px; color: #3677ff; padding-right :10px;" styleClass="bold1" rendered="{!language != 'en'}"/>
+                            <div style="padding-right:10px;">
+                              <apex:outputText value="{!overallTitle}" escape="false" style="font-size: 26px; " styleClass="bold1" rendered="{!language != 'en'}"/>  
+                            </div>
+                            
+                        </td>
+                        <td width="20%">
+                            <apex:outputPanel >
+                                <div style="color:#000!important; background-color:{!overAllColor}!important;font-size:60px!important; ">
+                                    <div style="width:25%; color:#fff!important;background-color:{!overAllColor}!important; padding: 19px 18px 19px 18px; "><span style="padding-left: 20px;margin-left:19px; " class="bold1 center" >{!overall}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                           <!-- <apex:outputPanel rendered="{!overall == 0}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel> -->
+                        </td>
+                        <td>
+                            <!--<div align="center">
+                                <apex:outputText value="{!overallTitle}" style="text-align: center; margin-left: 50%" /> <br/>
+                            </div> -->
+                            <div class="descriptionCol" >
+                                <apex:outputText value="{!overallDesc}" style="font-size: 15px;" >
+                                </apex:outputText>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="SALES" styleClass="labels" rendered="{!language == 'en'}"  />
+                            <apex:outputText value="VENTES" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%" >
+                            <apex:outputPanel rendered="{!IF(AND(sales != null, sales >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!sales}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!sales}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!sales == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td >
+                            <div class="descriptionCol" >
+                                <apex:outputPanel rendered="{!IF(AND(sales != null, sales >=0),true,false)}">
+                                    <apex:outputText value="{!salesDesc}" style="font-size: 14px;" >
+                                    </apex:outputText>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!sales == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="CUSTOMER SERVICE" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="SERVICE À LA CLIENTÈLE" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <apex:outputPanel rendered="{!IF(AND(customerService != null, customerService >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!customerService}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!customerService}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!customerService == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputPanel rendered="{!IF(AND(customerService != null, customerService >=0),true,false)}">
+                                    <apex:outputText value="{!customerServiceDesc}" style="font-size: 14px;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!customerService == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="ACCOUNTING" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="COMPTABILITÉ" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <apex:outputPanel rendered="{!IF(AND(accounting != null, accounting >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!accounting}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!accounting}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!accounting == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                 <apex:outputPanel rendered="{!IF(AND(accounting != null, accounting >=0),true,false)}">
+                                    <apex:outputText value="{!accountingDesc}" style="font-size: 14px;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!accounting == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="HR" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="RH" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <apex:outputPanel rendered="{!IF(AND(hr != null, hr >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!hr}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!hr}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!hr == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputPanel rendered="{!IF(AND(hr != null, hr >=0),true,false)}">
+                                    <apex:outputText value="{!hrDesc}" style="font-size: 14px;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!hr == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="DOCUMENTATION MANAGEMENT" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="GESTION DE DOCUMENTS" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <apex:outputPanel rendered="{!IF(AND(documentManagement != null, documentManagement >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!documentManagement}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!documentManagement}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!documentManagement == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                 <apex:outputPanel rendered="{!IF(AND(documentManagement != null, documentManagement >=0),true,false)}">
+                                    <apex:outputText value="{!documentManagementDesc}" style="font-size: 14px;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!documentManagement == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;font-weight:bold;">
+                            <apex:outputText value="MARKETING" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="MARKETING" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <apex:outputPanel rendered="{!IF(AND(marketing != null, marketing >=0),true,false)}">
+                                <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                    <div style="width:{!marketing}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1">{!marketing}%</span></div>
+                                </div> 
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!marketing == null}">
+                                <apex:outputText value="Skipped" styleClass="skipped" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Non-répondu" styleClass="skipped" rendered="{!language != 'en'}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputPanel rendered="{!IF(AND(marketing != null, marketing >=0),true,false)}">
+                                    <apex:outputText value="{!marketingDesc}" style="font-size: 14px;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!marketing == null}">
+                                    <apex:outputText value="-"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <div style="padding-right:10px;">
+                              <apex:outputText value="IDENTIFIED POTENTIAL<br/>PRODUCTIVITY GAINS"  escape="false" style="font-size: 15px;color: #3677ff;color: black;" styleClass="bold1" rendered="{!language == 'en'}"/>   
+                            </div>
+                            <div style="padding-right:10px;">
+                                <apex:outputText value="GAINS POTENTIELS DE<br/>PRODUCTIVITÉ IDENTIFIÉS" style="font-size: 15px;color: #3677ff;color: black;" styleClass="bold1" escape="false"  rendered="{!language != 'en'}"/>
+                            </div>  
+                        </td>
+                        <td width="25%">
+                            <apex:outputText value="{!productivityGain}%" styleClass="skipped  bold1 center" style="color: #00af50; font-size: 60px;margin-left:25px;"  />
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputText value="These are the potential gains that you have identified and quantified, solely based on the % of time or resources spent, lost or wasted on inefficient data entry, lost opportunities, and managers running around to get information." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Voici les gains potentiels que vous avez identifiés et quantifiés, basés uniquement sur le % de temps ou ressources dépensés, perdus ou gaspillés en saisies de données inefficaces, opportunités perdues, et gestionnaires qui cours partout pour de l'information." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="ACCESS" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="ACCÈS" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!access}%; color:#fff!important;background-color:#3677FF!important"> <span style="padding-left: 20px;" class="bold1" >{!access}%</span></div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                
+                                <apex:outputText value="Access:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Accès:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When your team has access to what they need to do their work, wherever and whenever they work." style="font-size: 14px;"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsque votre équipe peut accéder à ce dont elle a besoin, peut importe quand et où elle se trouve." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="INTEGRATION" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="INTÉGRATION" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!integration}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!integration}%</span></div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <span class="bold"> </span>
+                                <apex:outputText value="Integration:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Intégration:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When systems share relevant information with each other, without requiring human intervention." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsque vos systèmes partagent l'information qui leur ait utile sans intervention humaine." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="AUTOMATION" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="AUTOMATION" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!automation}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!automation}%</span>
+                                </div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputText value="Automation:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Automation:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When a system can do tasks by itself, enabling people to focus on more value-added endeavors or deliverables." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsqu'un système fait des tâches sans aide, pour que les personnes se consacrent aux livrables à valeur ajoutée." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="TRACKING OF INFORMATION" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="TRAÇABILITÉ DE L'INFORMATION" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!trackingOfInformtion}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!trackingOfInformtion}%</span></div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputText value="Tracking of information:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Traçabilité de l'information:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When information is stored safely, is shareable if needed, and its origins and revisions can be traced." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsque l'information est archivée tout en étant partageable, avec origine et révisions visibles." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="TASKS & PROJECT MANAGEMENT" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="TÀCHES & GESTION DE PROJECTS" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!tasksAndProjectManagement}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!tasksAndProjectManagement}%</span></div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <apex:outputText value="Tasks & PM:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Tâches & gestion de projects:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When tasks are in a system that makes them easy to view, delegate, follow-up on, and get notified/reminded about." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsque les tâches sont dans un système qui les rend faciles à voir, déléguer, suivre, et permet d'être notifié." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td width="30%" style="text-align: right;">
+                            <apex:outputText value="REPORTS" styleClass="labels" rendered="{!language == 'en'}"/>
+                            <apex:outputText value="RAPPORTS" styleClass="labels" rendered="{!language != 'en'}"/>
+                        </td>
+                        <td width="25%">
+                            <div style="color:#000!important;background-color:#CCCCCC!important;font-size:24px!important">
+                                <div style="width:{!reports}%; color:#fff!important;background-color:#3677FF!important"><span style="padding-left: 20px;" class="bold1" >{!reports}%</span></div>
+                            </div> 
+                        </td>
+                        <td>
+                            <div class="descriptionCol">
+                                <span class="bold"> </span>
+                                <apex:outputText value="Reports:" styleClass="bold"  rendered="{!language == 'en'}"/>
+                                <apex:outputText value="Rapports:" styleClass="bold"  rendered="{!language != 'en'}"/>
+                                <apex:outputText value=" When you can see goals, sales, KPIs, finances, project status, in one click, thereby making resource allocation easier." style="font-size: 14px;" rendered="{!language == 'en'}"/>
+                                <apex:outputText value=" Lorsqu'en un click vous voyez objectifs, ventes, KPIs, finances, statuts de projet... pour éclairer vos décisions." style="font-size: 14px;" rendered="{!language != 'en'}"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                </div>
+        	</div>
+            <div class="footer">
+                
+                <div >
+                    <div  style="float:left;display:inline-block;margin-top:6px;">
+                        <apex:outputText rendered="{!language == 'en'}" value="We can help you in your ditigal tranformation journey." style="color: #3677FF;font-size:20px;"/> 
+                        <apex:outputText rendered="{!language != 'en'}" value="Nous pouvons vous aider dans votre virague numérique." style="color: #3677FF;font-size:20px;"/><br/>
+                        <apex:outputText rendered="{!language == 'en'}" value="We won't bite. You can give us a call or send us a message." style="color: #00af50;font-size:20px;"   />
+                        <apex:outputText rendered="{!language != 'en'}" value="On ne mord pas. Vous pouvez nous appeler ou nous écrire un message." style="color: #00af50;font-size:20px;"   /> 
+                    </div>
+                    <div  style="float:right;display:inline-block;margin-top:6px;">
+                        <apex:outputText value="sales@SOLJIT.com"  style="color: #3677FF; display:block;font-size:20px;"/>
+                        <apex:outputText value="1-888-276-5548" style="color: #00af50;font-size:20px;"/> 
+                    </div>
+                    <div>
+                        <br/>
+                         <br/>
+                       
+                      
+                           <apex:image url="{!$Resource.SURVEY_REPORT_FOOTER}" width="100%" height="100%" style="display:block;margin-top:40px;" />
+                           
+                    </div>
+                </div>
+               
+            </div>
+        </body>
+    </html>    
+</apex:page>

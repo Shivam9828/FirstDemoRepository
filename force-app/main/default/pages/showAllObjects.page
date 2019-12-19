@@ -1,0 +1,33 @@
+<apex:page controller="DynamicObjectExampleController" sidebar="false">
+
+    <apex:form id="pageForm">
+
+        <apex:pageMessages />
+
+        <apex:selectList label="Select Object Name" title="Select Object Name" multiselect="false" value="{!selectedSObject}" size="1">
+
+            <apex:actionSupport event="onchange" action="{!generateRecordList}" reRender="pageForm"/> 
+
+            <apex:selectOptions value="{!SObjectNames}"/> 
+
+        </apex:selectList>
+
+        <apex:selectList label="Select Record" title="Select Record" multiselect="false" value="{!selectedRecord}" size="1" rendered="{!recordList !=null && recordList.size>0}">
+
+            <apex:actionSupport event="onchange" action="{!changeSelectedRecord}" /> 
+
+            <apex:selectOptions value="{!recordList}"/> 
+
+        </apex:selectList>
+
+        <apex:outputPanel title="Record Detail" id="recordHolder">
+
+            <!-- apex:detail will display all the details of the record -->
+
+            <apex:detail subject="{!selectedRecordId}" />
+
+        </apex:outputPanel>
+
+    </apex:form>
+
+</apex:page>

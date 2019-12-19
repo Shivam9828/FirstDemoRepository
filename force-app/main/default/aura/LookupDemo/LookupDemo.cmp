@@ -1,0 +1,29 @@
+<aura:component >
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute Name="selItem1" type="object"  access="public" />
+    <aura:attribute Name="selItem2" type="object"  access="public" />
+    <aura:attribute Name="selItem3" type="object"  access="public" />
+    <div class="slds">
+        <div class="slds-grid slds-wrap">
+     
+            <div class="slds-size_1-of-1 
+                        slds-small-size_1-of-1 
+                        slds-medium-size_1-of-2 
+                        slds-large-size_1-of-4 ">
+                <c:Lookup objectName="Account"
+                          field_API_text="Name"
+                          field_API_val="Id"
+                          limit="4"
+                          field_API_search="Name"
+                          lookupIcon="standard:account" 
+                          selItem="{!v.selItem2}" 
+                          placeholder="Enter space after text to search Accounts"
+                          />  
+                
+              
+            </div>
+         
+        </div>
+    </div>
+    
+</aura:component>

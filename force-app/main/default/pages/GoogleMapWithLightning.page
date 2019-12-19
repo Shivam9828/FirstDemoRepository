@@ -1,0 +1,19 @@
+<apex:page standardController="Account">
+ <apex:includeScript value="/lightning/lightning.out.js"/>
+
+ <div style="width:70%;height:100px;" id="FlipcardContainer" />
+
+ <script>
+ $Lightning.use("c:GoogleMapApp", function() {
+ $Lightning.createComponent("c:GoogleMap",
+ { 
+   recordId: "{!Account.id}"
+ },
+ "FlipcardContainer",
+ function(cmp) {
+      component.set("v.recordId" , '{!$CurrentPage.parameters.recId}');
+ console.log('Component created, do something cool here');
+ });
+ });
+ </script>
+</apex:page>

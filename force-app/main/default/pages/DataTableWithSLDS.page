@@ -1,0 +1,52 @@
+<apex:page StandardController="Account" extensions="MultiAdd" id="thePage" lightningStylesheets="true">
+    <apex:form id="frm">
+        <apex:slds />
+        <div class="slds-scope">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Name">Name</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Email">Country</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!lstInner}" var="e1">
+                        <tr>
+                            <td data-label="Name">
+                                <div class="slds-truncate">
+                                    
+                                    <apex:inputfield value="{!e1.acct.Name}"/>
+                                </div>
+                            </td>
+                            <td data-label="Name">
+                                <div class="slds-truncate">
+                                    
+                                    <apex:inputfield value="{!e1.acct.ShippingCountry}"/>
+                                </div>
+                            </td>
+                            <td data-label="Delete">
+                                <div class="slds-truncate">
+                                    <apex:commandButton value="X" action="{!Del}" rerender="frm" immediate="true">
+                                        <apex:param name="rowToBeDeleted" value="{!e1.recCount}" assignTo="{!selectedRowIndex}"></apex:param>
+                                    </apex:commandButton>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </apex:repeat>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+    <div>
+                <div class="slds-truncate" style="text-align:center;">
+                                
+                                <apex:commandbutton style="margin-right: 8px;" value="Add" action="{!Add}" rerender="frm"/>
+                                <apex:commandbutton value="Save" action="{!Save}"/></div>
+            </div></apex:form>
+</apex:page>

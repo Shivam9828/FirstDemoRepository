@@ -1,0 +1,58 @@
+<apex:page cache="false" sidebar="false" showheader="false" controller="SurveyThankYouPageController" name="Survey">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> 
+    <apex:slds />
+    <style>
+        .grad1 {
+        height: auto;
+        background-color: #3677FF; /* For browsers that do not support gradients */
+        background-image: linear-gradient(50deg, #3677FF
+        , #00b050); /* Standard syntax (must be last) */
+        }   
+        
+        body{
+        font-family: "Arial";
+        }
+        
+        .buttonStyle {
+        background:    #ffffff;
+        border-radius: 18px;
+        box-shadow:    0 0px #444444;
+        padding:       8px 41px;
+        color:         #ffffff;
+        display:       inline-block;
+        font:          bold 700 23px/1 "Calibri", sans-serif;
+       
+        text-align:    center;
+        
+        }
+        
+    </style>
+    
+    <div class="grad1" align="center">
+        <apex:image url="{!$Resource.Logo_SOLJIT}" width="308" height="160" style="margin-top: 25px; margin-bottom: 5px;" /><BR/>   
+        <apex:outputText value="SELF - ASSESSMENT" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'en'}" /> 
+        <apex:outputText value="AUTO-ÉVALUATION" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'fr'}" /> <BR/>
+        <apex:outputText value="DIGITAL TRANSFORMATION" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'en'}" />
+        <apex:outputText value="VIRAGE NUMÉRIQUE" style="color: white; font-size: 34px;font-family: Arial;font-weight: bold;" rendered="{!language == 'fr'}" />
+        <br/>
+        <apex:outputText value="Thank you for doing the Digital Transformation Self-Assessment survey." style="font-size: 20px; color: white" rendered="{!language == 'en'}" />
+        <apex:outputText value="Merci d’avoir complété votre Auto-évaluation sur le virage numérique." style="font-size: 20px; color: white" rendered="{!language == 'fr'}"/>
+        <br/> <br/>
+
+        <apex:outputText value="You will receive your detailed report by email shortly!" style="font-size: 20px; color: white" rendered="{!language == 'en'}"/>
+        <apex:outputText value="Vous recevrez vos résultats détaillés par courriel très bientôt!" style="font-size: 20px; color: white" rendered="{!language == 'fr'}"/>
+        <br/>
+        <br/>
+        <apex:form >
+            <apex:outputPanel rendered="{!language == 'en'}">
+         	<button class="buttonStyle" style="color:#3677FF;" formaction="http://www.soljit.com"><b><span style = "font-size:15px;">Back To SOLJIT.com</span></b></button> 
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!language == 'fr'}">
+                <button class="buttonStyle" style="color:#3677FF;" formaction="http://www.soljit.com/fr"><b><span style = "font-size:15px;">Retournez à SOLJIT.com</span></b></button> 
+            </apex:outputPanel><br/>
+        </apex:form>
+        <br/>
+        <br/>
+    </div>
+</apex:page>

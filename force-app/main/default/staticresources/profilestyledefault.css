@@ -1,0 +1,246 @@
+/* reset - Begin */
+
+html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, hgroup, menu, nav, section, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+
+/* reset - End */
+
+
+/* set block elements - Begin */
+
+article, aside, footer, header {
+	display: block;
+}
+
+/* set block elements - End */
+
+
+/* set elements to full width -  Begin*/
+
+img, object, embed {
+	max-width: 100%;
+}
+
+/* set elements to full width - End*/
+
+
+/* force a vertical scrollbar (page won't jump anymore) - Begin */
+
+html {
+	overflow-y: auto;
+}
+
+/* force a vertical scrollbar (page won't jump anymore)  - End */
+
+
+/* most lists don't have a bullet - Begin */
+
+ul {
+	list-style: none;
+}
+
+/* most lists don't have a bullet - End */
+
+/* standard text decorations - Begin */
+
+a {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+a:hover, a:active {
+	outline: none;
+	color: #333;
+}
+a {
+	color: #333;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:link {
+	-webkit-tap-highlight-color: #fcd700;
+}
+
+small {
+	font-size: 85%;
+}
+
+strong {
+	font-weight: bold;
+}
+
+/* standard text decorations - End */
+
+
+/* scale images better in IE7 - Begin */
+
+.ie7 img {
+	-ms-interpolation-mode: bicubic;
+}
+
+/* scale images better in IE7 - End */
+
+
+/* prevent background image flicker upon hover - Begin */
+
+.ie6 html {
+	filter: expression(document.execCommand("BackgroundImageCache", false, true));
+}
+
+/* prevent background image flicker upon hover - End */
+
+
+/* clearfix - Begin */
+
+.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+/* clearfix - End */
+
+
+/* main website styles - Begin */
+
+html {
+	height: 100%;
+}
+
+body {
+	width: 95%;
+	height: 100%;
+	margin: 0 auto;
+	font: 11px Verdana, Arial, Helvetica, sans-serif;
+	padding: 10px;
+}
+
+aside {
+	width: 90%;
+	margin: 0 auto;
+	max-width: 262px;
+	float: none;
+}
+aside div.outer {
+	border: 1px solid;
+	padding: 0 3px 5px 3px;
+}
+aside div.outer div.inner {
+	border: 1px solid;
+	padding: 3px;
+}
+aside div.outer div.inner video {
+	height: 100%;
+}
+aside div h1 {
+	padding: 5px;
+}
+aside div p.margintop {
+	margin-top: 10px;
+}
+aside div.outer div.inner ol#video-list {
+	padding-top: 5px;
+}
+aside div.outer div.inner ol#video-list li {
+	margin-left: 20px;
+}
+aside div.outer div.inner ol#document-list {
+	padding-bottom: 5px;
+}
+aside div.outer div.inner ol#document-list li {
+	word-break: break-all;
+	margin-left: 20px;
+}
+aside small {
+	display: block;
+	text-align: center;
+	margin-top: 10px;
+}
+aside small a {
+	color: #dddddd;
+	text-decoration: none;
+}
+aside small a:hover {
+	text-decoration: underline;
+}
+
+article {
+	width: 95%;
+	height: 95%;
+	margin: 20px auto;
+}
+article header {
+	border: 1px solid;
+	border-bottom: 0;
+	display: block;
+	width: 99%;
+}
+article header h1 {
+	padding: 5px;
+}
+article iframe {
+	width: 99%;
+	height: 90%;
+	border: 1px solid;
+	border-top: 0;
+	border-bottom: 0;
+}
+article footer {
+	border: 1px solid;
+	border-top: 0;
+	display: block;
+	width: 99%;
+	height: 7px;
+	margin-top: -2px;
+}
+
+@media only print, only screen and (min-width: 595px) {
+	html {
+		overflow-y: hidden;
+	}
+	aside {
+		width: 30%;
+	}
+	article {
+		float: right;
+		width: 65%;
+		margin-top: 0;
+	}
+}
+@media only print, only screen and (min-width: 768px) {
+	aside {
+		width: 23%;
+	}
+	article {
+		width: 75%;
+	}
+}
+@media only print, only screen and (min-width: 960px) {
+	body {
+		width: 90%;
+		height: 100%;
+		padding: 10px;
+	}
+	aside {
+		width: 23%;
+	}
+	article {
+		width: 75%;
+	}
+}
+@media only print, only screen and (min-width: 1140px) {
+	body {
+		max-width: 1140px;
+	}
+}
+#gocvone-video {
+	max-width:100%;
+}

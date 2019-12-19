@@ -1,0 +1,95 @@
+<aura:component controller="ListOfRecords">
+    <aura:attribute name="subTab" type="String" default="Accounts" />
+    <aura:attribute name="wrapRecords" type="AccountContactWrapper" />
+    <aura:attribute name="accCheck" type="boolean" default="false" />
+    <aura:attribute name="conCheck" type="boolean" default="false" />
+    <aura:attribute name="checkFor" type="boolean" default="false" />
+    <aura:attribute name="accRecords" type="Account[]" default="[]" />
+    <aura:attribute name="conRecords" type="Contact[]" default="[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}" />
+    <div class="c-container">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-small" size="12">
+                <div class="page-section page-header">
+                    <h1>List Of Records</h1>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:layout>
+                    <lightning:layoutItem padding="around-small" size="3">
+                        <div class="page-section page-right">
+                            
+                            <ul id="listItem">
+                                
+                                <li name="listItem">
+                                    <a onclick="{!c.changeTab}" class="slds-nav-vertical__action removeLink" data-tab="Accounts">
+                                        Accounts</a></li>
+                                <li name="listItem">
+                                    <a onclick="{!c.changeTab}" class="slds-nav-vertical__action removeLink" data-tab="Contacts">
+                                        Contacts</a></li>
+                            </ul>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="6">
+                        <div class="page-section page-main">
+                            <aura:if isTrue="{!v.subTab == 'Accounts'}">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="SALESINTEL FIELD"><b>ID</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="SALESFORCE FIELD"><b>Name</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="SALESFORCE FIELD"><b>Industry</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="SALESFORCE FIELD"><b>Phone</b></div></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.wrapRecords.accounts}" var="item" indexVar="fieldindex">
+                                            <tr class="slds-text-title_caps">
+                                                <td scope="col">{!item.Id}
+                                                </td>
+                                                <td scope="col">{!item.Name}
+                                                </td>
+                                                <td scope="col">{!item.Industry}
+                                                </td>
+                                                <td scope="col">{!item.Phone}
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table></aura:if>
+                            
+                            <aura:if isTrue="{!v.subTab == 'Contacts'}">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="Contact"><b>ID</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="Contact"><b>FirstName</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="Contact"><b>LastName</b></div></th>
+                                            <th scope="col" style="background: #568CE8;font-size:14px;"><div class="slds-truncate" id="div_headers" title="Contact"><b>Email</b></div></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.wrapRecords.contacts}" var="item" indexVar="fieldindex">
+                                            <tr class="slds-text-title_caps">
+                                                <td scope="col">{!item.Id}
+                                                </td>
+                                                <td scope="col">{!item.FirstName}
+                                                </td>
+                                                <td scope="col">{!item.LastName}
+                                                </td>
+                                                <td scope="col">{!item.Email}
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem>
+                    
+                </lightning:layout>
+            </lightning:layoutItem>
+            
+        </lightning:layout>
+    </div>
+</aura:component>

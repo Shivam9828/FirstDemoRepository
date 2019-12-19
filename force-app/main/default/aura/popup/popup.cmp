@@ -1,0 +1,5 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global"> 
+<lightning:recordEditForm aura:id="recordEditForm" objectApiName="Contact"> 
+<lightning:inputfield fieldName="TEST_Text__c"></lightning:inputfield> 
+</lightning:recordEditForm> 
+</aura:component>
